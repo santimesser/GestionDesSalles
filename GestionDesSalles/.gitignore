@@ -40,16 +40,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-# Angular
-/node_modules/
-dist/
-tmp/
-out-tsc/
-.angular/
-coverage/
-
-# Firebase
-.firebase/
-firebase-debug.log
-.firebaserc
