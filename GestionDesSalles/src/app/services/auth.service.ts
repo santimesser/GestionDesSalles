@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, switchMap, Observable, of  } from 'rxjs';
 import {
   Auth,
   authState,
@@ -17,7 +17,8 @@ import {
   Firestore,
   doc,
   setDoc,
-  getDoc
+  getDoc,
+  docData 
 } from '@angular/fire/firestore';
 
 import { Router } from '@angular/router';
@@ -135,7 +136,20 @@ export class AuthService {
    * Récupère l'utilisateur actuellement connecté
    */
   getCurrentUser(): Promise<User | null> {
-    console.log(authState(this.auth));
     return firstValueFrom(authState(this.auth));
   }
+
+  getCurrentUserWithRole(): Observable<{ uid: string, email: string, role: string } | null> {
+    return authState(this.auth).pipe(
+      switchMap(user => {
+        if (user) {
+          const userDoc = doc(this.firestore, `users/${user.uid}`);
+          return docData(userDoc) as Observable<{ uid: string, email: string, role: string }>;
+        } else {
+          return of(null);
+        }
+      })
+    );
+  }
+
 }

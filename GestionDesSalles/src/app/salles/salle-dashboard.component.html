@@ -1,0 +1,20 @@
+<h2>Gestion des salles</h2>
+
+<button mat-raised-button color="primary" (click)="ouvrirFormulaireCreation()">
+  Ajouter une salle
+</button>
+
+<div *ngIf="salles$ | async as salles">
+    <ul>
+      <li *ngFor="let salle of salles">
+        <strong>{{ salle.name }}</strong> - {{ salle.area }} m² - {{ salle.total_seats }} places
+        <button *ngIf="salle.uid" mat-button color="accent" (click)="ouvrirFormulaireModifier(salle.uid)">
+          Modifier
+        </button>
+        <button *ngIf="salle.uid" mat-button color="warn" (click)="supprimerSalle(salle.uid)">
+          Supprimer
+        </button>
+      </li>
+    </ul>
+  </div>
+  
