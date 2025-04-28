@@ -1,0 +1,296 @@
+
+.page {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+  caret-color: transparent;
+  user-select: none;
+  overflow: auto;
+}
+
+input:focus, textarea:focus {
+  caret-color: auto;
+}
+
+img {
+  max-width: 80%;
+  max-height: 80%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.titre {
+  grid-row: 1/1;
+  grid-column: 2/2;
+  align-content: center;
+}
+
+.logoLeft {
+  grid-row: 2/2;
+  grid-column: 1/1;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoRight {
+  grid-row: 2/2;
+  grid-column: 3/3;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 55px;
+  text-align: center;
+}
+
+.theme {
+  grid-row: 1/1;
+  grid-column: 3/3;
+  z-index: 1; 
+  position: relative;
+  display: flex;  
+}
+
+
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+
+/* ************************************** *//* ************************************** */
+
+
+
+.coolinput {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+.coolinput label.text {
+  font-size: 0.75rem;
+  color: #427c42;
+  font-weight: 700;
+  position: relative;
+  top: 0.5rem;
+  margin: 0 0 0 7px;
+  padding: 0 3px;
+  background: #e8e8e8;
+  width: fit-content;
+}
+
+.coolinput input[type=email].input,
+.coolinput input[type=password].input {
+  padding: 11px 10px;
+  font-size: 0.75rem;
+  border: 2px #427c42 solid;
+  border-radius: 5px;
+  background: #e8e8e8;
+}
+
+.coolinput input[type=email].input:focus,
+.coolinput input[type=password].input:focus {
+  outline: none;
+}
+
+/* ************************************** */
+
+label {
+  font-size: 20px;
+}
+
+#password,
+#email {
+  margin-top: 10px;
+}
+
+.login-container {
+  position: relative;
+  width: 350px;
+  height: 500px;
+  background-color: #f2f2f2 ;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  justify-items: center;
+  border-radius: 0.9em;
+  grid-row: 2/2;
+  grid-column: 2/2;
+    
+}
+
+.error-message {
+
+  color: red;
+  font-weight: bold;
+
+}
+
+/* button1  */ 
+.log-In {
+  font-size: 1.4em;
+  padding: 0.6em 0.8em;
+  border-radius: 0.5em;
+  border: none;
+  background-color: #cfc7c7;
+  color: rgb(65, 63, 63);
+  cursor: pointer;
+  box-shadow: 2px 2px 3px #000000b4;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 3px;
+  z-index: 0;
+  background: linear-gradient(90deg, #6d966d, #3a3a3a);
+  border-radius: 0.9em;
+  transition: all 0.4s ease;
+}
+
+.google-div, #register, #forgot{
+  margin: 12px;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 0.9em;
+  z-index: -1;
+  filter: blur(0);
+  transition: filter 0.4s ease;
+}
+
+.button:hover::before {
+  background: linear-gradient(90deg,  #6d966d, #3a3a3a);
+  filter: blur(1.2em);
+}
+.button:active::before {
+  filter: blur(0.2em);
+}
+
+/* buttongoogle  */  
+.google-button, .log-In {
+  max-width: 320px;
+  display: flex;
+  padding: 0.5rem 1.4rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  z-index: 0;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  gap: 0.75rem;
+  color: rgb(65, 63, 63);
+  background-color: #fff;
+  cursor: pointer;
+  transition: all .6s ease;
+  
+}
+
+.google-button svg {
+  height: 24px;
+}
+
+.google-button:hover, .log-In:hover {
+  transform: scale(1.02);
+}
+
+.google-div {
+  position: relative;
+  padding: 3px;
+  background: linear-gradient(90deg, #c92828, #f5f839, #43bb43, #435fbb);
+  border-radius: 0.9em;
+  z-index: 0;
+  transition: all 0.4s ease;
+}
+
+.google-div::before, .log-In::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 0.9em;
+  z-index: -1;
+  filter: blur(0);
+  transition: filter 0.4s ease;
+}
+
+.google-div:hover::before {
+  background: linear-gradient(90deg, #c92828, #eff140, #43bb43, #435fbb);
+  filter: blur(1.2em);
+}
+.google-div:active::before {
+  filter: blur(0.2em);
+}
+
+
+/***************button error********************/
+
+.info {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  width: 320px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  background: #509AF8;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px -3px #111;
+  grid-row: 3/3;
+  grid-column: 2/2;
+  
+}
+
+.info__icon {
+  width: 20px;
+  height: 20px;
+  transform: translateY(-2px);
+  margin-right: 8px;
+}
+
+.info__icon path {
+  fill: #fff;
+}
+
+.info__title {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+}
+
+.info__close {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.info__close path {
+  fill: #fff;
+}

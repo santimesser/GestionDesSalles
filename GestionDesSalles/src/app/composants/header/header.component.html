@@ -1,0 +1,39 @@
+<header>
+  <table>
+    <tr>
+      <th style="width:7%" id="barra">
+        <button [ngClass]="{'hidden': isMenuOpen}"  mat-icon-button (click)="toggleMenu()">
+          <mat-icon id="menuTheme">menu</mat-icon>
+        </button>
+        <div [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" class="menu">
+          <div class="menuTheme">
+          <ul>  
+            <br>
+            <div class="firstline">
+              <button mat-icon-button (click)="toggleMenu()">
+                <mat-icon id="close">close</mat-icon>
+              </button>
+              <img src="/Layer 1.png" alt="Logo">
+            </div>
+            <li><a routerLink="/dashboard">Accueil</a></li>
+            <mat-divider></mat-divider>
+            <li><a routerLink="/historique">Historique</a></li>
+            <mat-divider></mat-divider>
+            <li><a routerLink="/resume">Tableau de bord</a></li>
+            <mat-divider></mat-divider>
+            <li><a routerLink="/objectifs">Objectifs</a></li>
+            <mat-divider></mat-divider>
+
+            <button (click)="logout()">
+              <mat-icon id="logout">logout</mat-icon>
+            </button>
+          </ul>
+        </div>
+      </div>
+      </th>
+      <td>
+        <p class="animated" routerLink="/dashboard" >Bmart Sudget</p>
+      </td>
+    </tr>
+  </table>
+</header>

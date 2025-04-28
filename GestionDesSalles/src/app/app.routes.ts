@@ -1,3 +1,30 @@
 import { Routes } from '@angular/router';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { SetupProfileComponent } from './setup-profile/setup-profile.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
-export const routes: Routes = [];
+export const appRoutes: Routes = [
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.routes').then(m => m.authRoutes)
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  { path: 'setup-profile', 
+    component: SetupProfileComponent 
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent},
+  {
+    path: '',
+    redirectTo: '/auth/login',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: '/auth/login'
+  }
+];
