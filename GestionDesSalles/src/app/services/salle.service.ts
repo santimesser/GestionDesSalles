@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, setDoc, doc, updateDoc, deleteDoc, collectionData, docData } from '@angular/fire/firestore';
+import { Firestore, collection, setDoc, doc, updateDoc, deleteDoc, collectionData, docData, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Salle } from '../models/sales.models';
 
@@ -38,9 +38,10 @@ export class SalleService {
   /**
    * Lister toutes les salles existantes
    */
-  listerSalles(): Observable<Salle[]> {
+  listerSalles(currentUserUid: string): Observable<Salle[]> {
     const sallesRef = collection(this.firestore, 'rooms');
-    return collectionData(sallesRef, { idField: 'uid' }) as Observable<Salle[]>;
+    const q = query(sallesRef, where('created_by', '==', currentUserUid));
+    return collectionData(q, { idField: 'uid' }) as Observable<Salle[]>;
   }
 
   /**

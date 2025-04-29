@@ -5,8 +5,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SalleService } from '../../services/salle.service';
 import { Salle } from '../../models/sales.models';
+import { Auth } from '@angular/fire/auth';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'app-salle-create',
@@ -16,19 +20,27 @@ import { Salle } from '../../models/sales.models';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCheckboxModule
   ],
   templateUrl: './salle-create.component.html',
   styleUrls: ['./salle-create.component.css']
 })
 export class SalleCreateComponent {
-  
+
   
   salleForm!: FormGroup;
+  equipementsDispo: any[] = [];
+  equipmentSelection: string[] = [];
 
   constructor(private fb: FormBuilder, private salleService: SalleService,
+    private auth: Auth,
+    private firestore: Firestore,
     private dialogRef: MatDialogRef<SalleCreateComponent>
   ) {
+  }
+
+  ngOnInit(): void {
     this.salleForm = this.fb.group({
       name: ['', Validators.required],
       area: [0, [Validators.required, Validators.min(1)]],
@@ -37,6 +49,20 @@ export class SalleCreateComponent {
       equipment_description: ['', Validators.required],
       price_per_day: [0, [Validators.required, Validators.min(0)]]
     });
+
+    // Charger la liste des équipements disponibles depuis Firestore
+    const equipementRef = collection(this.firestore, 'equipment');
+    collectionData(equipementRef, { idField: 'uid' }).subscribe(data => {
+      this.equipementsDispo = data;
+    });
+  }
+
+  onEquipmentChange(id: string, checked: boolean): void {
+    if (checked) {
+      this.equipmentSelection.push(id);
+    } else {
+      this.equipmentSelection = this.equipmentSelection.filter(eid => eid !== id);
+    }
   }
 
   /**
@@ -44,13 +70,23 @@ export class SalleCreateComponent {
    */
   onSubmit(): void {
     if (this.salleForm.valid) {
+      const user = this.auth.currentUser;
+      if (!user) {
+        console.error('Utilisateur non connecté');
+        return;
+      }
+  
       const salle: Salle = {
         ...(this.salleForm.value as Salle),
+        equipment_ids: this.equipmentSelection,
+        created_by: user.uid  
       };
+  
       this.salleService.ajouterSalle(salle).then(() => {
         console.log('Salle ajoutée avec succès');
-        this.dialogRef.close(); // <- ferme le dialogue
+        this.dialogRef.close();
       });
     }
   }
+  
 }

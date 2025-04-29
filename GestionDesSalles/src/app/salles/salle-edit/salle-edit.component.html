@@ -32,7 +32,15 @@
     <input matInput type="number" formControlName="price_per_day">
   </mat-form-field>
 
-  <!-- Disposition fixée, non affichée -->
+
+  <h3>Options supplémentaires</h3>
+  <div *ngFor="let eq of equipementsDispo">
+    <mat-checkbox
+      [checked]="equipmentSelection.includes(eq.uid)"
+      (change)="onEquipmentChange(eq.uid, $event)">
+      {{ eq.name }} ({{ eq.extra_price }} CHF)
+    </mat-checkbox>
+  </div>
 
   <button mat-raised-button color="primary" type="submit" [disabled]="salleForm.invalid">
     Enregistrer les modifications

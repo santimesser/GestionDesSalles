@@ -8,4 +8,6 @@ export interface Salle {
   seated_places: number;
   equipment_description: string;
   price_per_day: number;
+  equipment_ids?: string[];
+  created_by: string;
 }
