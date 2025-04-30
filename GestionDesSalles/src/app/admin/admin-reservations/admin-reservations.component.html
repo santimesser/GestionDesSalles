@@ -1,0 +1,23 @@
+<h2>Liste des réservations</h2>
+
+<div *ngIf="reservations$ | async as reservations; else loading">
+  <div *ngIf="reservations.length > 0; else noReservations">
+    <mat-card *ngFor="let r of reservations" style="margin-bottom: 1rem;">
+      <mat-card-title>{{ r.room?.name || 'Salle inconnue' }}</mat-card-title>
+      <mat-card-content>
+        <p><strong>Utilisateur:</strong> {{ r.user?.first_name }} {{ r.user?.last_name }}</p>
+        <p><strong>Du:</strong> {{ r.startDate | date:'shortDate' }} <strong>au:</strong> {{ r.endDate | date:'shortDate' }}</p>
+        <p><strong>État:</strong> {{ r.status || 'Inconnu' }}</p>
+        <p *ngIf="r.options?.length"><strong>Options:</strong> {{ r.options.join(', ') }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p>Chargement des réservations...</p>
+</ng-template>
+
+<ng-template #noReservations>
+  <p>Aucune réservation trouvée.</p>
+</ng-template>

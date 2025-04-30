@@ -19,11 +19,20 @@ export const appRoutes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
+  },{
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
   },
   {
     path: 'salles',
     canActivate: [adminGuard],
-    loadComponent: () => import('./salles/salle-dashboard.component').then(m => m.SalleDashboardComponent)
+    loadComponent: () => import('./admin/salles/salle-dashboard.component').then(m => m.SalleDashboardComponent)
+  },
+  {
+    path: 'statistiques',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./admin/statistiques/statistiques.component').then(m => m.StatistiquesComponent)
   },
   {
     path: 'unauthorized',

@@ -1,0 +1,16 @@
+<div class="page">
+  <div class="header">
+    <app-header></app-header>
+  </div>
+
+
+<nav mat-tab-nav-bar>
+    <a mat-tab-link routerLink="/salles" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">
+     Salles
+    </a>
+    <a mat-tab-link routerLink="/statistiques" routerLinkActive #rla4="routerLinkActive" [active]="rla4.isActive">
+      Statistiques
+    </a>
+  </nav>
+</div>
+  

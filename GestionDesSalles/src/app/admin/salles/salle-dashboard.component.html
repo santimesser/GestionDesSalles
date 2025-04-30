@@ -1,0 +1,74 @@
+<div class="page">
+  <div class="header">
+    <app-header></app-header>
+  </div>
+
+
+
+  <div class="historiqueListe">
+    <div class="button" id="register"  id="salle">
+      <button (click)="ouvrirFormulaireCreation()" class="moreTransactions" type="button">
+        Ajouter une salle
+      </button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Surface (m²)</th>
+          <th>Places totales</th>
+          <th>Places assises</th>
+          <th>Équipements inclus</th>
+          <th>Prix par jour</th>
+          <th>Options supplémentaires</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let salle of getVisibleSalles()">
+          <td>{{ salle.name }}</td>
+          <td>{{ salle.area }}</td>
+          <td>{{ salle.total_seats }}</td>
+          <td>{{ salle.seated_places }}</td>
+          <td>{{ salle.equipment_description }}</td>
+          <td>{{ salle.price_per_day }} CHF</td>
+          <td>
+            <ul>
+              <li *ngFor="let equipId of salle.equipment_ids">
+                {{ getEquipmentName(equipId) }}
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="button">
+              <button (click)="ouvrirFormulaireModifier(salle.uid!)" class="moreTransactions" type="button">
+                ✏️ Modifier
+              </button>
+            </div>
+            <div class="button">
+              <button (click)="supprimerSalle(salle.uid!)" class="moreTransactions" type="button">
+                🗑️ Supprimer
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button (click)="loadPreviousPage()" [disabled]="!hasPreviousSalles()" class="pageChange">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+          <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
+        </svg>
+      </button>
+      <button (click)="loadNextPage()" [disabled]="!hasMoreSalles()" class="pageChange">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+          <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
+        </svg>
+      </button>
+    </div>
+
+  </div>
+</div>
