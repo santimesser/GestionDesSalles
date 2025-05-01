@@ -1,23 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Necesario para ngModel
 import { ReservationService } from '../../services/reservation.service';
-import { Observable } from 'rxjs';
-import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-admin-reservations',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
   templateUrl: './admin-reservations.component.html',
-  styleUrls: ['./admin-reservations.component.css']
+  styleUrls: ['./admin-reservations.component.css'],
+  imports: [CommonModule, FormsModule]  // Agregar CommonModule y FormsModule
 })
 export class AdminReservationsComponent implements OnInit {
-  reservations$!: Observable<any[]>;
+  reservations: any[] = [];
+  filteredReservations: any[] = [];
+
+  filterUser: string = '';
+  filterRoom: string = '';
+  filterDate: string = '';
 
   constructor(private reservationService: ReservationService) {}
 
   ngOnInit(): void {
-    // Chargement des réservations enrichies (utilisateur + salle)
-    this.reservations$ = this.reservationService.getAllReservations();
+    this.reservationService.getAllReservations().subscribe(data => {
+      this.reservations = data;
+      this.filteredReservations = [...data];
+    });
+  }
+
+  applyFilters(): void {
+    this.filteredReservations = this.reservations.filter(res => {
+      const matchUser = this.filterUser === '' || res.user?.username?.toLowerCase().includes(this.filterUser.toLowerCase());
+      const matchRoom = this.filterRoom === '' || res.room?.name?.toLowerCase().includes(this.filterRoom.toLowerCase());
+      const matchDate = this.filterDate === '' || (res.startDate && res.startDate.toISOString().startsWith(this.filterDate));
+      return matchUser && matchRoom && matchDate;
+    });
+  }
+
+  resetFilters(): void {
+    this.filterUser = '';
+    this.filterRoom = '';
+    this.filterDate = '';
+    this.filteredReservations = [...this.reservations];
   }
 }

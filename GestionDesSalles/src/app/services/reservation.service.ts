@@ -1,74 +1,62 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDoc } from '@angular/fire/firestore';
-import { Observable, from, switchMap, map } from 'rxjs';
+import { Firestore, collection, collectionData, doc, getDoc, getDocs } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { user } from 'rxfire/auth';
+import { Observable, from, switchMap, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
-  constructor(private firestore: Firestore, private auth: Auth) {}
+  constructor(private firestore: Firestore, private auth: Auth) { }
 
-  /**
-   * Récupère uniquement les réservations des salles créées par l'admin connecté.
-   */
   getAllReservations(): Observable<any[]> {
     const reservationsRef = collection(this.firestore, 'reservations');
 
     return user(this.auth).pipe(
       switchMap(authUser => {
-        if (!authUser) {
-          console.warn('Aucun utilisateur connecté.');
-          return from(Promise.resolve([]));
-        }
-
+        if (!authUser) return from(Promise.resolve([]));
         const uidAdmin = authUser.uid;
-        console.log('UID de l’admin connecté :', uidAdmin);
 
         return collectionData(reservationsRef, { idField: 'uid' }).pipe(
           switchMap((reservations: any[]) => {
-            console.log('Réservations récupérées :', reservations);
-
-            const filteredReservations = reservations.map(async reservation => {
+            const detailedReservations = reservations.map(async reservation => {
               try {
-                const roomPath = reservation.room_id?.path;
-                const userPath = reservation.user_id?.path;
+                const roomSnap = await getDoc(reservation.room_id);
+                if (!roomSnap.exists()) return null;
+                const roomData: any = roomSnap.data();
 
-                if (!roomPath || !userPath) {
-                  console.warn('Référence invalide dans la réservation :', reservation);
-                  return null;
-                }
+                if (roomData.created_by !== uidAdmin) return null;
 
-                const roomSnap = await getDoc(doc(this.firestore, roomPath));
-                if (!roomSnap.exists()) {
-                  console.warn('Salle non trouvée pour la réservation :', reservation);
-                  return null;
-                }
-
-                const roomData = roomSnap.data();
-                if (roomData['created_by'] !== uidAdmin) {
-                  console.log(`Salle ignorée (non créée par l’admin) : ${roomData['name']}`);
-                  return null;
-                }
-
-                const userSnap = await getDoc(doc(this.firestore, userPath));
+                const userSnap = await getDoc(reservation.user_id);
                 const userData = userSnap.exists() ? userSnap.data() : null;
+
+                const equipmentList: any[] = [];
+                const equipRef = collection(this.firestore, `reservations/${reservation.uid}/equipment`);
+                const equipDocs = await getDocs(equipRef);
+                for (const equip of equipDocs.docs) {
+                  const equipData = equip.data();
+                  const equipSnap = await getDoc(equipData['equipment_id']);
+                  const equipInfo = equipSnap.exists() ? equipSnap.data() as { name: string } : null;
+                  const equipName = equipInfo ? equipInfo.name : 'Inconnu';
+                  equipmentList.push({ name: equipName });
+                }
+
 
                 return {
                   ...reservation,
-                  user: userData,
                   room: roomData,
+                  user: userData,
+                  equipment: equipmentList,
                   startDate: reservation.start_date.toDate?.() ?? reservation.start_date,
                   endDate: reservation.end_date.toDate?.() ?? reservation.end_date
                 };
-
-              } catch (error) {
-                console.error('Erreur lors du traitement d’une réservation :', error);
+              } catch (err) {
+                console.error('Erreur de lecture:', err);
                 return null;
               }
             });
 
-            return from(Promise.all(filteredReservations)).pipe(
-              map(results => results.filter(res => res !== null))
+            return from(Promise.all(detailedReservations)).pipe(
+              map(all => all.filter(res => res !== null))
             );
           })
         );

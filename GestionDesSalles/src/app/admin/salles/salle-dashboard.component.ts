@@ -7,12 +7,13 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { SalleCreateComponent } from './salle-create/salle-create.component';
 import { SalleEditComponent } from './salle-edit/salle-edit.component';
+import { AdminReservationsComponent } from '../admin-reservations/admin-reservations.component';
 import { HeaderComponent } from '../../composants/header/header.component';
 
 @Component({
   selector: 'app-salle-dashboard',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent,AdminReservationsComponent],
   templateUrl: './salle-dashboard.component.html',
   styleUrls: ['./salle-dashboard.component.css']
 })

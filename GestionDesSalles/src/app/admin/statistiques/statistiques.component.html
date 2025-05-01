@@ -1,2 +1,10 @@
+<h2>Top 5 salles les plus réservées (3 derniers mois)</h2>
 
-<app-admin-reservations></app-admin-reservations>
+<canvas baseChart
+  [data]="{
+    labels: topSallesLabels,
+    datasets: [{ data: topSallesData, label: 'Réservations' }]
+  }"
+  [options]="chartOptions"
+  chartType="bar">
+</canvas>
