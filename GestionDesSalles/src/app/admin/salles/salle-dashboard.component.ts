@@ -9,11 +9,13 @@ import { SalleCreateComponent } from './salle-create/salle-create.component';
 import { SalleEditComponent } from './salle-edit/salle-edit.component';
 import { AdminReservationsComponent } from '../admin-reservations/admin-reservations.component';
 import { HeaderComponent } from '../../composants/header/header.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-salle-dashboard',
   standalone: true,
-  imports: [CommonModule, HeaderComponent,AdminReservationsComponent],
+  imports: [CommonModule, HeaderComponent,AdminReservationsComponent,
+    MatSnackBarModule],
   templateUrl: './salle-dashboard.component.html',
   styleUrls: ['./salle-dashboard.component.css']
 })
@@ -28,6 +30,7 @@ export class SalleDashboardComponent implements OnInit {
     private dialog: MatDialog,
     private salleService: SalleService,
     private firestore: Firestore,
+    private snackBar: MatSnackBar,
     private auth: Auth
   ) {}
 
@@ -73,7 +76,10 @@ export class SalleDashboardComponent implements OnInit {
   supprimerSalle(salleId: string): void {
     if (confirm('Voulez-vous vraiment supprimer cette salle ?')) {
       this.salleService.supprimerSalle(salleId).then(() => {
-        console.log('Salle supprimée avec succès');
+        this.snackBar.open('Salle modifie avec succès !', 'Fermer', {
+          duration: 3000,
+          verticalPosition: 'bottom'
+        });
         this.sallesFullList = this.sallesFullList.filter(s => s.uid !== salleId); // Mise à jour immédiate de la liste
       });
     }

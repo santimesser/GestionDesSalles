@@ -52,4 +52,20 @@
     La capacité totale doit être supérieure ou égale à la capacité avec tables
   </div>
 
+  <mat-error *ngIf="salleForm.get('area')?.hasError('pattern')">
+    La surface doit être un nombre entier positif (ex: 45)
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('total_seats')?.hasError('pattern')">
+    Le nombre total de places doit être un entier positif (ex: 30)
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('seated_places')?.hasError('pattern')">
+    Le nombre de places assises doit être un entier positif ou zéro
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('price_per_day')?.hasError('pattern')">
+    Le prix doit être un entier (ex: 75)
+  </mat-error>
+
 </form>

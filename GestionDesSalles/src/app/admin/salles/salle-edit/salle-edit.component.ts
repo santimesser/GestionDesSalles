@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SalleService } from '../../../services/salle.service';
 import { Salle } from '../../../models/sales.models';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
@@ -19,7 +20,8 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   templateUrl: './salle-edit.component.html',
   styleUrls: ['./salle-edit.component.css']
@@ -35,17 +37,21 @@ export class SalleEditComponent implements OnInit {
   constructor(private fb: FormBuilder, private salleService: SalleService,
     private dialogRef: MatDialogRef<SalleEditComponent>,
     private firestore: Firestore,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { salleId: string }) {}
 
     ngOnInit(): void {
       this.salleForm = this.fb.group({
         name: ['', Validators.required],
-        area: [0, [Validators.required, Validators.min(1)]],
-        total_seats: [0, [Validators.required, Validators.min(1)]],
-        seated_places: [0, [Validators.required, Validators.min(0)]],
+        area: [0, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)]],
+        total_seats: [0, [Validators.required, Validators.min(1), Validators.pattern(/^[1-9]\d*$/)] ],
+        seated_places: [0, [Validators.required, Validators.min(0), Validators.pattern(/^[1-9]\d*$/)]],
         equipment_description: ['', Validators.required],
-        price_per_day: [0, [Validators.required, Validators.min(0)]]
-      });
+        price_per_day: [0, [Validators.required, Validators.min(0), Validators.pattern(/^[1-9]\d*$/)]]
+      },
+        {
+          validators: this.capaciteValidator 
+        });
     
       const equipementRef = collection(this.firestore, 'equipment');
       collectionData(equipementRef, { idField: 'uid' }).subscribe(data => {
@@ -89,10 +95,21 @@ export class SalleEditComponent implements OnInit {
         equipment_ids: this.equipmentSelection
       };
       this.salleService.modifierSalle(this.data.salleId, salleData).then(() => {
-        console.log('Salle modifiée');
+        this.snackBar.open('Salle modifie avec succès !', 'Fermer', {
+          duration: 3000,
+          verticalPosition: 'bottom'
+        });
         this.dialogRef.close();
       });
     }
+  }
+
+  capaciteValidator(group: FormGroup) {
+    const total = group.get('total_seats')?.value;
+    const assis = group.get('seated_places')?.value;
+    return total != null && assis != null && total < assis
+      ? { capaciteInvalide: true }
+      : null;
   }
   
 }

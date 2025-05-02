@@ -1,10 +1,9 @@
-<h2>Top 5 salles les plus réservées (3 derniers mois)</h2>
+<h2>Équipements les plus demandés (ce mois)</h2>
 
-<canvas baseChart
-  [data]="{
-    labels: topSallesLabels,
-    datasets: [{ data: topSallesData, label: 'Réservations' }]
-  }"
-  [options]="chartOptions"
-  chartType="bar">
-</canvas>
+<div style="display: block; max-width: 600px; margin: auto;">
+  <canvas baseChart
+    [data]="{ labels: pieChartLabels, datasets: [{ data: pieChartData }] }"
+    [type]="pieChartType"
+    [options]="pieChartOptions">
+  </canvas>
+</div>

@@ -19,7 +19,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Nombre de places assises</mat-label>
-    <input matInput type="number" formControlName="seated_places">
+    <input matInput type="number" formControlName="seated_places">  
   </mat-form-field>
 
   <mat-form-field appearance="fill">
@@ -45,5 +45,26 @@
   <button mat-raised-button color="primary" type="submit" [disabled]="salleForm.invalid">
     Enregistrer les modifications
   </button>
+
+  <div class="error-message" *ngIf="salleForm.hasError('capaciteInvalide')">
+    La capacité totale doit être supérieure ou égale à la capacité avec tables
+  </div>
+
+  <mat-error *ngIf="salleForm.get('area')?.hasError('pattern')">
+    La surface doit être un nombre entier positif (ex: 45)
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('total_seats')?.hasError('pattern')">
+    Le nombre total de places doit être un entier positif (ex: 30)
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('seated_places')?.hasError('pattern')">
+    Le nombre de places assises doit être un entier positif ou zéro
+  </mat-error>
+  
+  <mat-error *ngIf="salleForm.get('price_per_day')?.hasError('pattern')">
+    Le prix doit être un entier (ex: 75)
+  </mat-error>
+  
 
 </form>

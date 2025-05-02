@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChartType, ChartOptions } from 'chart.js';
+import { ChartType, ChartConfiguration } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ReservationService } from '../../services/reservation.service';
 import { map } from 'rxjs';
@@ -13,41 +13,49 @@ import { map } from 'rxjs';
   styleUrls: ['./statistiques.component.css']
 })
 export class StatistiquesComponent implements OnInit {
-  topSallesLabels: string[] = [];
-  topSallesData: number[] = [];
 
-  chartOptions: ChartOptions = {
+pieChartLabels: string[] = [];
+  pieChartData: number[] = [];
+  pieChartType: ChartType = 'pie';
+
+  pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'bottom'
+      }
     }
   };
 
   constructor(private reservationService: ReservationService) {}
 
   ngOnInit(): void {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
     this.reservationService.getAllReservations().pipe(
       map(reservations => {
-        const now = new Date();
-        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-
         const filtered = reservations.filter(r => {
           const d = r.startDate instanceof Date ? r.startDate : new Date(r.startDate);
-          return d >= threeMonthsAgo;
+          return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
         });
 
-        const salleCount: { [key: string]: number } = {};
-        for (const r of filtered) {
-          const name = r.room?.name || 'Inconnue';
-          salleCount[name] = (salleCount[name] || 0) + 1;
+        const equipmentCounts: { [key: string]: number } = {};
+
+        for (const res of filtered) {
+          for (const eq of res.equipment || []) {
+            const name = eq.name || '(inconnu)';
+            equipmentCounts[name] = (equipmentCounts[name] || 0) + 1;
+          }
         }
 
-        const sorted = Object.entries(salleCount)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 5);
+        const labels = Object.keys(equipmentCounts);
+        const data = labels.map(label => equipmentCounts[label]);
 
-        this.topSallesLabels = sorted.map(e => e[0]);
-        this.topSallesData = sorted.map(e => e[1]);
+        this.pieChartLabels = labels;
+        this.pieChartData = data;
       })
     ).subscribe();
   }
