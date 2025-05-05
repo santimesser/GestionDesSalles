@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,7 +40,8 @@ export class LoginComponent implements OnInit {
     const user = await this.authService.getCurrentUser();
     if (user) {
       this.router.navigate(['/dashboard']);
-    } else {
+    } 
+    else {
       this.isLoading = false;
     }
   }
@@ -53,9 +56,18 @@ export class LoginComponent implements OnInit {
           this.loginForm.value.email,
           this.loginForm.value.password
         );
+        this.snackBar.open('Connexion réussie !', 'Fermer', {
+          duration: 3000,
+          verticalPosition: 'bottom'
+        });
       } catch (error) {
         this.errorMessage = this.handleError(error);
         this.errorMessageBool = true;
+        this.snackBar.open('Erreur de connexion', 'Fermer', {
+          duration: 3000,
+          verticalPosition: 'bottom'
+        });
+        throw error;
       }
     }
   }
@@ -66,9 +78,20 @@ export class LoginComponent implements OnInit {
   async loginWithGoogle() {
     try {
       await this.authService.loginWithGoogle();
+      this.snackBar.open('Connexion réussie !', 'Fermer', {
+        duration: 3000,
+        verticalPosition: 'bottom'
+      });
+  
+      // Redirection ou autres logiques...
     } catch (error) {
+      this.snackBar.open('Erreur de connexion', 'Fermer', {
+        duration: 3000,
+        verticalPosition: 'bottom'
+      });
       this.errorMessage = "Erreur lors de la connexion avec Google.";
       this.errorMessageBool = true;
+      throw error;
     }
   }
 

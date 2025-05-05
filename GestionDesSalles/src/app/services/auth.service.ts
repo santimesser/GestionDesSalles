@@ -59,14 +59,13 @@ export class AuthService {
     const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
     const user = userCredential.user;
 
-
-
     if (!user.emailVerified) {
       await signOut(this.auth);
       throw new Error("Veuillez vérifier votre adresse email.");
     }
 
     const userData = await this.getUserData(user.uid);
+
 
 
     if (!userData || !userData.username || userData.username.trim() === '') {
@@ -84,6 +83,7 @@ export class AuthService {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const user = result.user;
+      
   
       const userRef = doc(this.firestore, `users/${user.uid}`);
       const userSnap = await getDoc(userRef);
@@ -142,14 +142,22 @@ export class AuthService {
   getCurrentUserWithRole(): Observable<{ uid: string, email: string, role: string } | null> {
     return authState(this.auth).pipe(
       switchMap(user => {
-        if (user) {
-          const userDoc = doc(this.firestore, `users/${user.uid}`);
-          return docData(userDoc) as Observable<{ uid: string, email: string, role: string }>;
-        } else {
-          return of(null);
-        }
+        if (!user) return of(null);
+        const userDoc = doc(this.firestore, `users/${user.uid}`);
+        return docData(userDoc).pipe(
+          // combinamos los datos de Firestore con uid y email del user connecté
+          switchMap((data: any) => {
+            if (!data || !data.role) return of(null);
+            return of({
+              uid: user.uid,
+              email: user.email || '',
+              role: data.role
+            });
+          })
+        );
       })
     );
   }
+  
 
 }
