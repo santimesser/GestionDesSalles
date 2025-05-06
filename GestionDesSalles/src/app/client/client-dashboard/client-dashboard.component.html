@@ -1,0 +1,28 @@
+<div class="page">
+    <div class="header">
+      <app-header></app-header>
+    </div>
+  
+  
+    <div class="message">
+      <h3>Bienvenue client, {{ userName }} !</h3>
+    </div>
+  
+  
+    <div class="button" id="salles">
+      <button class="log-In" (click)="toggleReserver()" >
+        <a mat-button routerLink="/salles" routerLinkActive="active-link">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reserver&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </a>
+        <img src="reserves.webp" alt="Salles">
+      </button> 
+    </div>
+    <div class="button" id="statistiques" (click)="toggleGestion()">
+      <button class="log-In" >
+        <a mat-button routerLink="/gestion" routerLinkActive="active-link">
+                   Gérer mes <br>   &nbsp;reservations&nbsp;
+        </a>
+        <img src="conferences.webp" alt="Salles">
+      </button> 
+    </div>
+  </div>

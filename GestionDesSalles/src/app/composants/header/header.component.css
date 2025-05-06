@@ -6,11 +6,20 @@ header {
     margin-top: 0;
 }
 
+@media (width >= 850px) {
+
+    #titre{
+        display: none;
+    }
+
+}
+
 @media (width < 850px) {
 
     td {
         display: none;
     }
+
 
     th {
         vertical-align: middle;
@@ -27,6 +36,11 @@ header {
 
     table {
         width: 100%;
+    }
+
+    #titre{
+        left: 40%;
+        position: absolute;
     }
 
 }
@@ -206,7 +220,6 @@ img {
     margin-left: 20px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #333;
 }
 
 #close {
@@ -286,3 +299,5 @@ background-color: #f2f2f2;
 .menuTheme.dark-theme a:hover {
     color: #575757;
 }
+
+

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necesario para ngModel
+import { FormsModule } from '@angular/forms'; 
 import { ReservationService } from '../../services/reservation.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { ReservationService } from '../../services/reservation.service';
   standalone: true,
   templateUrl: './admin-reservations.component.html',
   styleUrls: ['./admin-reservations.component.css'],
-  imports: [CommonModule, FormsModule]  // Agregar CommonModule y FormsModule
+  imports: [CommonModule, FormsModule] 
 })
 export class AdminReservationsComponent implements OnInit {
   reservations: any[] = [];

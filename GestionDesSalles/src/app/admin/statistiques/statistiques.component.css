@@ -1,5 +1,173 @@
+.page {
+    height: 100%;
+    width: 100%;
+    caret-color: transparent;
+    user-select: none;
+    overflow: auto;
+    transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease;
+    z-index: -10;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    align-content: center;
+    z-index: 10;
+}
 
 canvas{
-    max-width: 500px;
-    max-height: 500px;
+    max-width: 300px;
+    max-height: 300px;
+    justify-self: center;
+}
+
+.pieChart, .lineChart, .label{
+    justify-self: center;
+}
+
+.label{
+    top:10%;
+    justify-self: center;
+    text-align: center;
+    min-height: 200px;
+}
+
+h3{
+    text-align: center;
+}
+
+
+.container{
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+@media (width < 850px) {
+    .page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message {
+        top: 15%;
+        left:0;
+        width:100%;
+    }
+    .button{
+        justify-content: center;
+        align-items: center;
+    }
+    .label{
+        position:absolute;
+        top: 8%;
+        justify-self: center;
+        text-align: center;
+    }
+    .pieChart, .lineChart{
+        margin-top: 400px;
+    }
+
+}
+
+select, #year{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* button1  */ 
+.log-In {
+    font-size: 1.4em;
+    padding: 0.6em 0.8em;
+    border-radius: 0.5em;
+    border: none;
+    background-color: #cfc7c7;
+    color: rgb(65, 63, 63);
+    cursor: pointer;
+    box-shadow: 2px 2px 3px #000000b4;
+  }
+  
+  .button {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 3px;
+    z-index: 0;
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    border-radius: 0.9em;
+    transition: all 0.4s ease;
+  }
+  
+  .button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 0.9em;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+  .button:hover::before {
+    background: linear-gradient(90deg,  #6d966d, #3a3a3a);
+    filter: blur(1.2em);
+  }
+  .button:active::before {
+    filter: blur(0.2em);
+  }
+  
+  /* buttongoogle  */  
+ .log-In, select, #year {
+    max-width: 320px;
+    display: flex;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    z-index: 0;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    gap: 0.75rem;
+    color: rgb(65, 63, 63);
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .6s ease; 
+  }
+
+  
+.log-In:hover, select, #year {
+    transform: scale(1.02);
+  }
+    
+.log-In::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 0.9em;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+#salles{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+
+select, #year {
+    justify-self: center;    
 }

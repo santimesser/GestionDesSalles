@@ -32,6 +32,8 @@ export class StatistiquesComponent implements OnInit {
     { name: 'Décembre', value: 11 }
   ];
 
+  selectedGraphics: boolean = true;
+
   selectedMonth = new Date().getMonth(); // Mois sélectionné par défaut : actuel
   selectedYear = new Date().getFullYear(); // Année actuelle
 
@@ -132,5 +134,9 @@ export class StatistiquesComponent implements OnInit {
     
       console.log('→ Données prêtes pour le graphique:', this.lineChartData);
     });
+  }
+
+  toggleGraphics():void{
+    this.selectedGraphics = !this.selectedGraphics;
   }
 }

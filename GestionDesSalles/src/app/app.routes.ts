@@ -3,6 +3,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { SetupProfileComponent } from './setup-profile/setup-profile.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { adminGuard } from './guards/admin.guard';
+import { ClientGuard } from './guards/client.guard';
 
 export const appRoutes: Routes = [
   {
@@ -37,6 +38,21 @@ export const appRoutes: Routes = [
   {
     path: 'unauthorized',
     loadComponent: () => import('./unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
+  },
+  {
+    path: 'client',
+    canActivate: [ClientGuard],
+    loadComponent: () => import('./client/client-dashboard/client-dashboard.component').then(m => m.ClientDashboardComponent)
+  },
+  {
+    path: 'gestion',
+    canActivate: [ClientGuard],
+    loadComponent: () => import('./client/client-reservation/client-reservation.component').then(m => m.ClientReservationComponent)
+  },
+  {
+    path: 'client',
+    canActivate: [ClientGuard],
+    loadComponent: () => import('./client/client-dashboard/client-dashboard.component').then(m => m.ClientDashboardComponent)
   },
   {
     path: '',

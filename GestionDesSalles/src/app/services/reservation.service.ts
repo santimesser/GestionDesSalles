@@ -6,7 +6,9 @@ import {
   doc,
   getDoc,
   getDocs,
-  DocumentReference
+  query,
+  DocumentReference,
+  where
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, mergeMap } from 'rxjs';
 import { Auth, user } from '@angular/fire/auth';
@@ -49,10 +51,11 @@ export class ReservationService {
                 return {
                   ...reservation,
                   user: userSnap.exists() ? userSnap.data() : null,
-                  room: roomData,
+                  room: roomSnap.exists() ? roomSnap.data() : null,
                   startDate: reservation.start_date.toDate?.() ?? reservation.start_date,
                   endDate: reservation.end_date.toDate?.() ?? reservation.end_date,
-                  equipment
+                  equipment,
+                  disposition: reservation.disposition 
                 };
               } catch (e) {
                 console.error('Erreur lors du traitement de la réservation :', e);
@@ -111,6 +114,89 @@ export class ReservationService {
       })
     );
   }
+
+  getReservationsForUser(userId: string): Observable<any[]> {
+    const reservationsRef = collection(this.firestore, 'reservations');
+    const userRef = doc(this.firestore, `users/${userId}`);
+    const q = query(reservationsRef, where('user_id', '==', userRef));
+  
+    return collectionData(q, { idField: 'uid' }).pipe(
+      mergeMap((reservations: any[]) =>
+        from(Promise.all(reservations.map(async reservation => {
+          try {
+            const roomSnap = await getDoc(reservation.room_id);
+            const userSnap = await getDoc(userRef);
+            const equipmentRef = collection(this.firestore, `reservations/${reservation.uid}/equipment`);
+            const equipmentSnap = await getDocs(equipmentRef);
+  
+            // Traiter les équipements
+            const equipment: any[] = await Promise.all(
+              equipmentSnap.docs.map(async (docSnap) => {
+                const data = docSnap.data();
+                const equipmentIdPath = data['equipment_id'];
+                const equipmentDocRef = typeof equipmentIdPath === 'string'
+                  ? doc(this.firestore, equipmentIdPath)
+                  : equipmentIdPath;
+  
+                try {
+                  const equipmentDoc = await getDoc(equipmentDocRef);
+                  const equipmentData = equipmentDoc.exists()
+                    ? equipmentDoc.data() as { name: string; extra_price: number }
+                    : { name: 'Inconnu', extra_price: 0 };
+  
+                  return {
+                    name: equipmentData.name,
+                    price: equipmentData.extra_price
+                  };
+                } catch (err) {
+                  console.error(' Erreur sur équipement:', err);
+                  return { name: 'Erreur', price: 0 };
+                }
+              })
+            );
+  
+            const roomData = roomSnap.exists()
+              ? roomSnap.data() as {
+                  name: string;
+                  price_per_day: number;
+                  area?: number;
+                  capacity_seated?: number;
+                  capacity_total?: number;
+                  equipment_description?: string;
+                }
+              : {
+                  name: 'Salle inconnue',
+                  price_per_day: 0
+                };
+  
+                const total_price =
+                roomData.price_per_day +
+                equipment.reduce((sum, eq) => sum + (Number(eq.price) || 0), 0);
+  
+            return {
+              ...reservation,
+              user: userSnap.exists() ? userSnap.data() : null,
+              room: roomData,
+              startDate: reservation.start_date.toDate?.() ?? reservation.start_date,
+              endDate: reservation.end_date.toDate?.() ?? reservation.end_date,
+              equipment,
+              disposition: reservation.disposition,
+              total_price
+            };
+          } catch (e) {
+            console.error('Erreur lors de la récupération de la réservation:', e);
+            return null;
+          }
+        })))
+      ),
+      map(results => results.filter(res => res !== null))
+    );
+  }
+  
+  
+  
+  
+  
 
   getReservationsCountPerDayByRoom(): Observable<{
     [roomName: string]: { [dateStr: string]: number }

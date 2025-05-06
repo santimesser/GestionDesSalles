@@ -2,34 +2,68 @@
   <table>
     <tr>
       <th style="width:7%" id="barra">
-        <button [ngClass]="{'hidden': isMenuOpen}"  mat-icon-button (click)="toggleMenu()">
+        <button [ngClass]="{'hidden': isMenuOpen}" mat-icon-button (click)="toggleMenu()">
           <mat-icon id="menuTheme">menu</mat-icon>
         </button>
-        <div [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" class="menu">
-          <div class="menuTheme">
-          <ul>  
-            <br>
-            <div class="firstline">
-              <button mat-icon-button (click)="toggleMenu()">
-                <mat-icon id="close">close</mat-icon>
-              </button>
-              <img src="/Layer 1.png" alt="Logo">
-            </div>
-            <li><a routerLink="/dashboard">Accueil</a></li>
-            <mat-divider></mat-divider>
-            <li><a routerLink="/salles">Salles</a></li>
-            <mat-divider></mat-divider>
 
-            <button (click)="logout()">
-              <mat-icon id="logout">logout</mat-icon>
-            </button>
-          </ul>
+        <div [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" *ngIf="userRole=='admin' " class="menu">
+          <div class="menuTheme">
+            <ul>
+              <br>
+              <div class="firstline">
+                <button mat-icon-button (click)="toggleMenu()">
+                  <mat-icon id="close">close</mat-icon>
+                </button>
+                <img src="Layer_1.png" alt="Logo">
+              </div>
+              <li><a routerLink="/dashboard">Accueil</a></li>
+              <mat-divider></mat-divider>
+              <li><a routerLink="/salles">Salles</a></li>
+              <mat-divider></mat-divider>
+              <li><a routerLink="/statistiques">Statistiques</a></li>
+              <mat-divider></mat-divider>
+
+              <button (click)="logout()">
+                <mat-icon id="logout">logout</mat-icon>
+              </button>
+            </ul>
+          </div>
         </div>
-      </div>
+
+        <div [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" *ngIf="userRole=='client' " class="menu">
+          <div class="menuTheme">
+            <ul>
+              <br>
+              <div class="firstline">
+                <button mat-icon-button (click)="toggleMenu()">
+                  <mat-icon id="close">close</mat-icon>
+                </button>
+                <img src="Layer_1.png" alt="Logo">
+              </div>
+              <li><a routerLink="/client">Accueil</a></li>
+              <mat-divider></mat-divider>
+              <li><a routerLink="/reserver">Reserver</a></li>
+              <mat-divider></mat-divider>
+              <li><a routerLink="/gestion">Gérer mes reservations</a></li>
+              <mat-divider></mat-divider>
+
+              <button (click)="logout()">
+                <mat-icon id="logout">logout</mat-icon>
+              </button>
+            </ul>
+          </div>
+        </div>
+
       </th>
+
       <td>
-        <p class="animated" routerLink="/dashboard">Gestion Des Salles</p>
+        <p class="animated" routerLink="/admin" *ngIf="userRole=='admin'" >Gestion Des Salles</p>
+        <p class="animated" routerLink="/client" *ngIf="userRole=='client'" >Gestion Des Salles</p>
+        <p class="animated" routerLink="/dashboard" *ngIf="!userRole" >Gestion Des Salles</p>
       </td>
+      <img src="Layer_1.png" id="titre" routerLink="/admin" *ngIf="userRole=='admin'" >
+      <img src="Layer_1.png" id="titre" routerLink="/client" *ngIf="userRole=='client'" >
+      <img src="Layer_1.png" id="titre" routerLink="/dashboard" *ngIf="!userRole" >
     </tr>
   </table>
 </header>

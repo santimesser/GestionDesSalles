@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { HeaderComponent } from '../../composants/header/header.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../composants/header/header.component';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-admin-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatTabsModule, HeaderComponent],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']
+  selector: 'app-client-dashboard',
+  imports: [CommonModule, HeaderComponent, RouterModule, MatTabsModule],
+  templateUrl: './client-dashboard.component.html',
+  styleUrl: './client-dashboard.component.css'
 })
-export class AdminDashboardComponent implements OnInit {
+export class ClientDashboardComponent  implements OnInit {
   userName: string = 'Utilisateur';
   userId: string = '';
   userRole: string = '';
+  
 
   constructor(
     private authService: AuthService,
@@ -37,11 +37,11 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  toggleSalles() {
-    this.router.navigate(['/salles']);
+  toggleReserver() {
+    this.router.navigate(['/reserver']);
   }
   
-  toggleStatistiques() {
-    this.router.navigate(['/statistiques']);
+  toggleGestion() {
+    this.router.navigate(['/gestion']);
   }
 }

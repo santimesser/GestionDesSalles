@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Firestore, doc, onSnapshot, Unsubscribe, updateDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -31,31 +32,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userName: string = 'Utilisateur';
   isMenuOpen = false;
   userId: string = '';
+  userRole: string = '';
+  userData: { uid: string; email: string; role: string; } | null = null;
   private userSubscription: Unsubscribe | null = null; 
-
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
   async ngOnInit() {
-    const user = await this.authService.getCurrentUser();
-    if (user) {
-      const userData = await this.authService.getUserData(user.uid);
-      this.userId = user.uid;
-    }
+    this.authService.getCurrentUserWithRole().subscribe(userData => {
+      if (userData) {
+        this.userData = userData;
+        this.userId = userData.uid;
+        this.userRole = userData.role;
+        this.userName = userData.email;
+      }
+    });
   }
 
 
 
   async logout() {
     await this.authService.logout();
-    this.router.navigate(['/auth/login']); // Redirigir al login después del logout
+    this.router.navigate(['/auth/login']); 
   }
 
   ngOnDestroy() {
     if (this.userSubscription) {
-      this.userSubscription(); //  Appel correct de la fonction Unsubscribe
+      this.userSubscription(); 
       this.userSubscription = null;
     }
   }

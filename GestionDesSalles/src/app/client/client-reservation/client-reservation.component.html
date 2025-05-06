@@ -1,0 +1,73 @@
+<div class="page">
+    <div class="header">
+        <app-header></app-header>
+    </div>
+
+
+    <div class="message">
+        <h1>Mes réservations</h1>
+    </div>
+
+
+    <div class="button" id="salles">
+        <div class="log-In" (click)="toggleReserver()">
+            <a mat-button routerLink="/salles" routerLinkActive="active-link">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reserver&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </a>
+            <img src="reserves.webp" alt="Salles">
+        </div>
+    </div>
+    <div class="button" id="statistiques" (click)="toggleGestion()">
+        <div class="log-In">
+            <a mat-button routerLink="/gestion" routerLinkActive="active-link">
+                Gérer mes <br> &nbsp;reservations&nbsp;
+            </a>
+            <img src="conferences.webp" alt="Salles">
+        </div>
+    </div>
+
+    
+</div>
+
+
+<h2>Liste des réservations</h2>
+
+<div class="reservations-container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Salle</th>
+        <th>Prix / jour</th>
+        <th>Date</th>
+        <th>Superficie</th>
+        <th>Capacité</th>
+        <th>Matériel inclus</th>
+        <th>Disposition</th>
+        <th>Équipements loués</th>
+        <th>Total estimé</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let res of reservations">
+        <td>{{ res.room?.name }}</td>
+        <td>{{ res.room?.price_per_day }} CHF</td>
+        <td>{{ res.startDate | date: 'fullDate' }}</td>
+        <td>{{ res.room?.area }} m²</td>
+        <td>{{ res.room?.capacity_seated }} assis / {{ res.room?.capacity_total }} total</td>
+        <td>{{ res.room?.equipment_description }}</td>
+        <td>{{ res.disposition }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let eq of res.equipment">
+              {{ eq.name }} - {{ eq.price }} CHF
+            </li>
+          </ul>
+        </td>
+        <td><strong>{{ res.total_price }} CHF</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

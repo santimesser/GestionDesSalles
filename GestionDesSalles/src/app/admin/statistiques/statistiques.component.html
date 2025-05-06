@@ -3,33 +3,44 @@
     <app-header></app-header>
   </div>
 
-<h2>Statistiques des équipements réservés</h2>
-
-<!-- Filtres : mois et année -->
-<div style="margin-bottom: 20px;">
-  <label for="month">Mois :</label>
-  <select id="month" [(ngModel)]="selectedMonth" (change)="loadChartData()">
-    <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
-  </select>
-
-  <label for="year">Année :</label>
-  <input id="year" type="number" [(ngModel)]="selectedYear" (change)="loadChartData()" min="2020" max="2100">
-</div>
-
-<!-- Graphique en camembert -->
-<h3>Répartition du matériel demandé (mois sélectionné)</h3>
-<canvas baseChart
-        [data]="equipmentChartData"
-        [type]="pieChartType"
-        [options]="pieChartOptions">
-</canvas>
 
 
-<h3>Évolution des réservations par jour (toutes salles)</h3>
+  <div class="container">
+    <!-- Filtres : mois et année -->
+    <div class="label" style="margin-bottom: 20px;">
+      <h2>Statistiques des équipements réservés</h2>
+      <label for="month">Mois :</label>
+      
+      <div class="buttom">
+      <select id="month" [(ngModel)]="selectedMonth" (change)="loadChartData()">
+        <option *ngFor="let m of months" [value]="m.value">{{ m.name }}</option>
+      </select>
+    </div>
+      <label for="year">Année :</label>
+      <div class="buttom">
+      <input id="year" type="number" [(ngModel)]="selectedYear" (change)="loadChartData()" min="2020" max="2100">
+      </div>
+      <br><br>
+      <div class="button" id="salles">
+        <button class="log-In" (click)="toggleGraphics()">
+          Change
+        </button>
+      </div>
 
-<canvas baseChart
-        [type]="'line'"
-        [data]="lineChartData"
-        [options]="lineChartOptions">
-</canvas>
+    </div>
+
+    <!-- Graphique en camembert -->
+    <div class="pieChart" *ngIf="selectedGraphics">
+      <h3>Répartition du matériel demandé (mois sélectionné)</h3>
+      <canvas baseChart [data]="equipmentChartData" [type]="pieChartType" [options]="pieChartOptions">
+      </canvas>
+    </div>
+
+    <div class="lineChart" *ngIf="!selectedGraphics">
+      <h3>Évolution des réservations par jour (toutes salles)</h3>
+
+      <canvas baseChart [type]="'line'" [data]="lineChartData" [options]="lineChartOptions">
+      </canvas>
+    </div>
+  </div>
 </div>

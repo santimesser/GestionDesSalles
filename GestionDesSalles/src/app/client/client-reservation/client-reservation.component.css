@@ -1,0 +1,169 @@
+.page {
+    height: 100%;
+    width: 100%;
+    caret-color: transparent;
+    user-select: none;
+    overflow: auto;
+    display:grid;
+    grid-template-rows: 1.5fr 3fr 1.5fr;
+    grid-template-columns: 0.1fr 1fr 1fr 1fr 1fr 1fr 0.1fr;
+    transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease;
+    z-index: -10;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    align-content: center;
+    z-index: 10;
+}
+
+.message {
+    position: absolute;
+    align-content: center;
+    height: auto;
+    top: 10%;
+    left:0;
+    width:100%;
+}
+
+h1{
+    text-align: center;
+}
+
+.button {
+    position: absolute;
+    padding: 3px;
+    z-index: 0;
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    border-radius: 0.9em;
+    transition: all 0.4s ease;
+}
+
+img {
+    width: 75px;
+    height: auto;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+#salles,
+#statistiques {
+    display: flex;
+    border: 1px;
+    align-items: center;
+    border-radius: 9px;
+    justify-content: space-between;
+    border: 0.1px solid #3333334f;
+    position: absolute;
+}
+
+#statistiques {
+    top: 50%;
+}
+
+#salles {
+    top: 25%;
+}
+
+
+a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+@media (width >= 850px) {
+    .button {
+        right: 10%;
+    }
+    
+.button::before {
+    inset: 0;
+}
+
+}
+
+@media (width < 850px) {
+    .page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+
+    #salles,
+    #statistiques {
+        z-index: 1;
+        position: static;
+        margin: 10px 0;
+        margin-top:70px;
+        max-width: 300px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .button{
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
+.log-In {
+    font-size: 1.4em;
+    padding: 0.6em 0.8em;
+    border-radius: 0.5em;
+    border: none;
+    background-color: #cfc7c7;
+    color: rgb(65, 63, 63);
+    cursor: pointer;
+    box-shadow: 2px 2px 3px #000000b4;
+}
+
+
+.button::before {
+    content: "";
+    position: absolute;
+    margin: auto;
+    border-radius: 0.9em;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+}
+
+.button:hover::before {
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    filter: blur(1.2em);
+}
+
+.button:active::before {
+    filter: blur(0.2em);
+}
+
+.log-In {
+    display: flex;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    z-index: 0;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: middle;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    gap: 0.75rem;
+    color: rgb(65, 63, 63);
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .6s ease;
+}
+
+
