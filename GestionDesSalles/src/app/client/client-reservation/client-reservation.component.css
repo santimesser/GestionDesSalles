@@ -1,158 +1,231 @@
 .page {
     height: 100%;
     width: 100%;
-    caret-color: transparent;
-    user-select: none;
+    background-color: #f5e6f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow: auto;
-    display:grid;
-    grid-template-rows: 1.5fr 3fr 1.5fr;
-    grid-template-columns: 0.1fr 1fr 1fr 1fr 1fr 1fr 0.1fr;
-    transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease;
-    z-index: -10;
-}
-
-.header {
+    position: relative;
+  }
+  
+  .header {
     position: absolute;
     top: 0;
-    align-content: center;
+    width: 100%;
     z-index: 10;
-}
-
-.message {
-    position: absolute;
-    align-content: center;
-    height: auto;
-    top: 10%;
-    left:0;
-    width:100%;
-}
-
-h1{
+  }
+  
+  .message {
     text-align: center;
-}
-
-.button {
+    margin-top: 90px;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .add-button {
     position: absolute;
-    padding: 3px;
+    top: 11%;
+    right: 10%;
+    width: 40px;
+    height: 40px;
+    font-size: 2rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-button:hover {
+    background-color: #555;
+  }
+  
+  .reservations-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 100px;
+    margin-bottom: 40px;
+  }
+  
+  .reservation-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(36, 167, 53, 0.349);
+    text-align: center;
+    width: 200px;
+    position: relative;
+    margin: 20px;
+    transition: all 0.4s ease; 
+    height: 300px
+  }
+  
+  .reservation-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    border-radius: 8px;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+  .reservation-card:hover::before {
+    filter: blur(1.2em); 
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .date {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .card-body p {
+    margin: 10px 0;
+    font-size: 1rem;
+  }
+  .card-body{
+  
+    margin-bottom: 40px;}
+  
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    position:absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+  }
+  
+  .edit-icon, .delete-icon {
+    font-size: 1rem;
+    cursor: pointer;
+    color: #333;
+  }
+  
+  .edit-icon:hover, .delete-icon:hover {
+    color: #007bff;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination span {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  @media (width < 850px) {
+    .reservations-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .reservation-card {
+      width: 80%;
+      margin-bottom: 20px;
+    }
+    .reservations-container {
+      margin-top: 0px;
+    }
+    .add-button {
+      position: absolute;
+      right: 5%;
+    }
+  }
+
+  .button {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    border: none;
+    margin-right: 5px;
+    cursor: pointer;
+    outline: none;
+    top:0;
     z-index: 0;
+    padding: 3px;
     background: linear-gradient(90deg, #6d966d, #3a3a3a);
     border-radius: 0.9em;
     transition: all 0.4s ease;
-}
-
-img {
-    width: 75px;
-    height: auto;
-    border-radius: 15px;
-    object-fit: cover;
-}
-
-#salles,
-#statistiques {
-    display: flex;
-    border: 1px;
-    align-items: center;
-    border-radius: 9px;
-    justify-content: space-between;
-    border: 0.1px solid #3333334f;
-    position: absolute;
-}
-
-#statistiques {
-    top: 50%;
-}
-
-#salles {
-    top: 25%;
-}
-
-
-a {
-    color: #333;
-    text-decoration: none;
-    font-size: 1.1rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-@media (width >= 850px) {
-    .button {
-        right: 10%;
-    }
-    
-.button::before {
-    inset: 0;
-}
-
-}
-
-@media (width < 850px) {
-    .page {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-
-
-    #salles,
-    #statistiques {
-        z-index: 1;
-        position: static;
-        margin: 10px 0;
-        margin-top:70px;
-        max-width: 300px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .button{
-        justify-content: center;
-        align-items: center;
-    }
-}
-
-
-.log-In {
-    font-size: 1.4em;
-    padding: 0.6em 0.8em;
-    border-radius: 0.5em;
-    border: none;
-    background-color: #cfc7c7;
-    color: rgb(65, 63, 63);
-    cursor: pointer;
-    box-shadow: 2px 2px 3px #000000b4;
-}
-
-
-.button::before {
+    margin-top: 20px;
+  }
+  
+  .button::before {
     content: "";
     position: absolute;
+    inset: 0;
     margin: auto;
     border-radius: 0.9em;
     z-index: -1;
     filter: blur(0);
     transition: filter 0.4s ease;
-}
-
-.button:hover::before {
+  }
+  
+  .button:hover::before {
     background: linear-gradient(90deg, #6d966d, #3a3a3a);
     filter: blur(1.2em);
-}
-
-.button:active::before {
+  }
+  
+  .button:active::before {
     filter: blur(0.2em);
-}
-
-.log-In {
+  }
+  
+  .moreTransactions {
+    position: relative;
     display: flex;
     padding: 0.5rem 1.4rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
     font-weight: 700;
-    z-index: 0;
     text-align: center;
     text-transform: uppercase;
     vertical-align: middle;
@@ -163,7 +236,12 @@ a {
     color: rgb(65, 63, 63);
     background-color: #fff;
     cursor: pointer;
-    transition: all .6s ease;
-}
-
-
+    transition: all 0.6s ease;
+    z-index: 1;
+    align-self: center;
+  }
+  
+  .moreTransactions:hover {
+    transform: scale(1.02);
+  }
+  

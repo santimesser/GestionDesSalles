@@ -1,0 +1,48 @@
+<h2>Modifier la réservation</h2>
+
+<div *ngIf="!peutModifier" class="alert">
+  Cette réservation ne peut plus être modifiée (moins de 14 jours avant la date).
+</div>
+
+<form *ngIf="peutModifier" (ngSubmit)="modifierReservation()">
+
+  <!-- Salle (affichage seul) -->
+  <div class="salle-info">
+    <label>Salle réservée :</label>
+    <p>{{ salleCourante?.data?.name || 'Salle inconnue' }}</p>
+  </div>
+
+  <!-- Date -->
+  <label for="date">Date de la réservation</label>
+  <input type="date" [(ngModel)]="selectedDate" name="date" required>
+
+  <!-- Disposition -->
+  <label for="disposition">Disposition</label>
+  <select [(ngModel)]="reservation.disposition" name="disposition" required>
+    <option value="rangées">Rangées</option>
+    <option value="tables en U">Tables en U</option>
+    <option value="conférence">Conférence</option>
+  </select>
+
+  <!-- Équipements -->
+  <label>Équipements à louer disponibles pour cette salle</label>
+  <div *ngFor="let eq of equipementsDisponibles">
+    <input
+      type="checkbox"
+      [checked]="selectedEquipements.includes(eq.ref.id)"
+      (change)="toggleEquipement(eq.ref.id, $event)"
+    />
+    {{ eq.data.name }} ({{ eq.data.extra_price }} CHF)
+  </div>
+
+  <div class="total-box">
+    <span>{{ totalEstime }} CHF</span>
+  </div>
+
+  
+
+  <div class="button">
+    <button class="moreTransactions" type="submit">Valider</button>
+  </div>
+  
+</form>

@@ -38,7 +38,7 @@ export class ClientDashboardComponent  implements OnInit {
   }
 
   toggleReserver() {
-    this.router.navigate(['/reserver']);
+    this.router.navigate(['/dashboard']);
   }
   
   toggleGestion() {

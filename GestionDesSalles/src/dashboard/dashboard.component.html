@@ -1,15 +1,28 @@
-<div class="page" >
+<div class="page">
     <div class="header">
         <app-header></app-header>
     </div>
 
-    
-
     <div class="message">
-        <h3>Bienvenue, {{ userName }} !</h3> 
+        <h1>Salles pour reserver</h1>
+      </div>
+
+    <div class="reservations-container">
+        <div class="reservation-card" *ngFor="let salle of salles">
+
+            <div class="card-header">
+                <span class="price">{{ salle.price_per_day | currency:'.-' }}</span>
+            </div>
+            <div class="card-body">
+                <h3>{{ salle.name }}</h3>
+                <p>{{ salle.area }} m²</p>
+                <p>{{ salle.seated_places || 0 }} assis / {{ salle.total_seats || 0 }} total</p>
+                <p>{{ salle.equipment_description || 'Non spécifié' }}</p>
+            </div>
+            <div class="card-actions">
+                <div class="button">
+                    <button class="moreTransactions" type="button" (click)="ouvrirReservation(salle)">Reserver</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-
-
-
-</div>

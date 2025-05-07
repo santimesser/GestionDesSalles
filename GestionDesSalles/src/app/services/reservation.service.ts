@@ -8,7 +8,8 @@ import {
   getDocs,
   query,
   DocumentReference,
-  where
+  where,
+  deleteDoc
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, mergeMap } from 'rxjs';
 import { Auth, user } from '@angular/fire/auth';
@@ -241,6 +242,23 @@ export class ReservationService {
       })
     );
   }
+
+  /**
+ * Supprime une réservation et ses équipements associés
+ */
+supprimerReservation(reservationId: string): Promise<void> {
+  const reservationDocRef = doc(this.firestore, `reservations/${reservationId}`);
+  const equipmentCollectionRef = collection(this.firestore, `reservations/${reservationId}/equipment`);
+
+  return getDocs(equipmentCollectionRef).then(snapshot => {
+    const deletes = snapshot.docs.map(docSnap =>
+      deleteDoc(doc(this.firestore, `reservations/${reservationId}/equipment/${docSnap.id}`))
+    );
+
+    return Promise.all(deletes).then(() => deleteDoc(reservationDocRef));
+  });
+}
+
   
   
   

@@ -1,0 +1,113 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-top: 1rem;
+    color: #2c3e50;
+  }
+  
+  label {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    color: #34495e;
+  }
+  
+  input,
+  select {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+  }
+    
+  div[ng-reflect-ng-for-of] {
+    margin-left: 1rem;
+  }
+  
+  .alert {
+    background-color: #ffe0e0;
+    color: #c0392b;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    max-width: 500px;
+    margin: 1rem auto;
+  }
+  
+
+  /* ========== Boutons (Ajouter, Modifier, Supprimer) ========== */
+  
+  .button {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    border: none;
+    margin-right: 5px;
+    cursor: pointer;
+    outline: none;
+    top:0;
+    z-index: 0;
+    padding: 3px;
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    border-radius: 0.9em;
+    transition: all 0.4s ease;
+    margin-top: 20px;
+  }
+
+  .button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 0.9em;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+  .button:hover::before {
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    filter: blur(1.2em);
+  }
+  
+  .button:active::before {
+    filter: blur(0.2em);
+  }
+
+  .moreTransactions {
+    position: relative;
+    display: flex;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    width:100%;
+    text-transform: uppercase;
+    vertical-align: middle;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    gap: 0.75rem;
+    color: rgb(65, 63, 63);
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.6s ease;
+    z-index: 1;
+    align-items: center;
+  }
+  
+  .moreTransactions:hover {
+    transform: scale(1.02);
+  }
+  

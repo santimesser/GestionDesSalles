@@ -50,11 +50,6 @@ export const appRoutes: Routes = [
     loadComponent: () => import('./client/client-reservation/client-reservation.component').then(m => m.ClientReservationComponent)
   },
   {
-    path: 'client',
-    canActivate: [ClientGuard],
-    loadComponent: () => import('./client/client-dashboard/client-dashboard.component').then(m => m.ClientDashboardComponent)
-  },
-  {
     path: '',
     redirectTo: '/auth/login',
     pathMatch: 'full'
