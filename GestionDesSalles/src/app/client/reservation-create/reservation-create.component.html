@@ -1,18 +1,24 @@
 <h2>Nouvelle réservation</h2>
 
 <form (ngSubmit)="creerReservation()" #form="ngForm">
-  <!-- Sélection de la salle -->
-  <label for="room">Salle</label>
-  <select name="room" [(ngModel)]="selectedRoomId" (change)="onRoomChange()" required>
-    <option *ngFor="let room of salles" [value]="room.ref.id">{{ room.data.name }}</option>
-  </select>
+  <!-- Sélection de la salle (seulement si aucune salle n'est pré-sélectionnée) -->
+  <div *ngIf="!sallePreSelectionnee">
+    <label for="room">Salle</label>
+    <select name="room" [(ngModel)]="selectedRoomId" (change)="onRoomChange()" required>
+      <option value="" disabled selected>Sélectionnez une salle</option>
+      <option *ngFor="let room of salles" [value]="room.ref.id">{{ room.data.name }}</option>
+    </select>
+  </div>
+
+  <!-- Affichage de la salle pré-sélectionnée -->
+  <div *ngIf="sallePreSelectionnee" class="salle-info">
+    <label>Salle sélectionnée :</label>
+    <p>{{ sallePreSelectionnee.name }}</p>
+  </div>
 
   <!-- Dates -->
-  <label for="start_date">Date de début</label>
-  <input type="datetime-local" name="start_date" [(ngModel)]="reservation.start_date" required>
-
-  <label for="end_date">Date de fin</label>
-  <input type="datetime-local" name="end_date" [(ngModel)]="reservation.end_date" required>
+  <label for="start_date">Date de réservation :</label>
+  <input type="date" name="start_date" [(ngModel)]="reservationDate" required>
 
   <!-- Disposition -->
   <label for="disposition">Disposition</label>
@@ -25,10 +31,16 @@
   <!-- Équipements -->
   <label>Équipements à louer disponibles</label>
   <div *ngFor="let eq of equipementsDisponibles">
-    <input type="checkbox" [value]="eq.ref" (change)="toggleEquipement(eq.ref, $event)">
+    <input type="checkbox" [checked]="selectedEquipements.includes(eq.ref.id)"
+      (change)="toggleEquipement(eq.ref.id, $event)" />
     {{ eq.data.name }} ({{ eq.data.extra_price }} CHF)
   </div>
-  
 
-  <button type="submit" [disabled]="form.invalid">Confirmer</button>
+  <div class="total-box">
+    <span>Total estimé : {{ totalEstime }} CHF</span>
+  </div>
+
+  <div class="button">
+    <button class="moreTransactions" type="submit" [disabled]="form.invalid">Confirmer</button>
+  </div>
 </form>

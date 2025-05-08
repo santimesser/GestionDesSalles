@@ -7,11 +7,12 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { ReservationCreateComponent } from '../app/client/reservation-create/reservation-create.component';
 import { firstValueFrom } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -20,6 +21,8 @@ export class DashboardComponent implements OnInit {
   userId: string = '';
   userRole: string = '';
   salles: any[] = [];
+  currentPage: number = 1;
+  pageSize: number = 8;
 
   constructor(
     private authService: AuthService,
@@ -29,34 +32,47 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // Vérifie l'utilisateur connecté
     const user = await this.authService.getCurrentUser();
     const userWithRole = await firstValueFrom(this.authService.getCurrentUserWithRole());
 
-    console.log('Utilisateur connecté :', userWithRole);
-
-    // Redirection si admin
-    if (userWithRole?.role === 'admin' && this.router.url !== '/admin') {
+    if (userWithRole?.role === 'admin') {
       this.router.navigate(['/admin']);
       return;
     }
 
-    // Chargement des infos utilisateur
     if (user) {
       const userData = await this.authService.getUserData(user.uid);
       this.userId = user.uid;
       this.userName = userData?.username || user.displayName || 'Utilisateur';
       this.userRole = userWithRole?.role || '';
-    } else {
-      this.router.navigate(['/auth/login']);
-      return;
-    }
+    } 
 
-    // Charger toutes les salles
     const salleRef = collection(this.firestore, 'rooms');
     collectionData(salleRef, { idField: 'id' }).subscribe((salles) => {
       this.salles = salles;
     });
+  }
+
+  get paginatedSalles() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.salles.slice(start, end);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.salles.length / this.pageSize);
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
   async ouvrirReservation(salle: any) {
@@ -76,5 +92,4 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/auth/login']);
     }
   }
-
 }

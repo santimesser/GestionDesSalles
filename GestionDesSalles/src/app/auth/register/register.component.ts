@@ -94,6 +94,10 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
   /**
    * Connexion avec Google
    */

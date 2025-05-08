@@ -28,6 +28,7 @@ img {
   grid-row: 1/1;
   grid-column: 2/2;
   align-content: center;
+  cursor: pointer;
 }
 
 .logoLeft {
@@ -37,6 +38,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor:pointer;
 }
 
 .logoRight {
@@ -46,6 +48,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor:pointer;
 }
 
 h1 {

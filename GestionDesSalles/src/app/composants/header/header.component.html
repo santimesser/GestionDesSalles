@@ -54,6 +54,24 @@
           </div>
         </div>
 
+        <div [ngClass]="{'menu-open': isMenuOpen, 'menu-closed': !isMenuOpen}" *ngIf="userRole!='client' && userRole!='admin'" class="menu">
+          <div class="menuTheme">
+            <ul>
+              <br>
+              <div class="firstline">
+                <button mat-icon-button (click)="toggleMenu()">
+                  <mat-icon id="close">close</mat-icon>
+                </button>
+                <img src="Layer_1.png" alt="Logo">
+              </div>
+              <li><a routerLink="/auth/login">Log-In</a></li>
+              <mat-divider></mat-divider>
+              <li><a routerLink="/auth/register">Sign-In</a></li>
+              <mat-divider></mat-divider>
+            </ul>
+          </div>
+        </div>
+
       </th>
 
       <td>

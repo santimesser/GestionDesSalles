@@ -42,7 +42,12 @@ export class ReservationService {
 
                 if (roomData['created_by'] !== uidAdmin) return null;
 
-                const userSnap = await getDoc(reservation.user_id);
+                let userRef = typeof reservation.user_id === 'string'
+  ? doc(this.firestore, `users/${reservation.user_id}`)
+  : reservation.user_id;
+
+const userSnap = await getDoc(userRef);
+
                 const equipmentRef = collection(this.firestore, `reservations/${reservation.uid}/equipment`);
                 const equipmentSnap = await getDocs(equipmentRef);
 
@@ -56,7 +61,7 @@ export class ReservationService {
                   startDate: reservation.start_date.toDate?.() ?? reservation.start_date,
                   endDate: reservation.end_date.toDate?.() ?? reservation.end_date,
                   equipment,
-                  disposition: reservation.disposition 
+                  disposition: reservation.disposition
                 };
               } catch (e) {
                 console.error('Erreur lors du traitement de la réservation :', e);
@@ -80,37 +85,37 @@ export class ReservationService {
    */
   getEquipmentStatsByMonthYear(month: number, year: number): Observable<{ [key: string]: number }> {
     const reservationsRef = collection(this.firestore, 'reservations');
-  
+
     return collectionData(reservationsRef, { idField: 'uid' }).pipe(
       switchMap(async (reservations: any[]) => {
         const stats: { [key: string]: number } = {};
-  
+
         const monthInt = Number(month);
         const yearInt = Number(year);
-  
+
         for (const res of reservations) {
           const rawDate = res.start_date;
           const date = rawDate?.toDate?.() ?? new Date(rawDate);
-  
-  
+
+
           if (date.getMonth() !== monthInt || date.getFullYear() !== yearInt) {
             continue;
           }
-  
+
           const equipPath = `reservations/${res.uid}/equipment`;
           const equipRef = collection(this.firestore, equipPath);
           const equipDocs = await getDocs(equipRef);
-  
+
           equipDocs.forEach(docSnap => {
             const equipData = docSnap.data();
             const equipRef = equipData['equipment_id'];
             if (!equipRef || !equipRef.path) return;
-  
+
             const id = equipRef.path.split('/')[1];
             stats[id] = (stats[id] || 0) + 1;
           });
         }
-  
+
         return stats;
       })
     );
@@ -120,7 +125,7 @@ export class ReservationService {
     const reservationsRef = collection(this.firestore, 'reservations');
     const userRef = doc(this.firestore, `users/${userId}`);
     const q = query(reservationsRef, where('user_id', '==', userRef));
-  
+
     return collectionData(q, { idField: 'uid' }).pipe(
       mergeMap((reservations: any[]) =>
         from(Promise.all(reservations.map(async reservation => {
@@ -129,7 +134,7 @@ export class ReservationService {
             const userSnap = await getDoc(userRef);
             const equipmentRef = collection(this.firestore, `reservations/${reservation.uid}/equipment`);
             const equipmentSnap = await getDocs(equipmentRef);
-  
+
             // Traiter les équipements
             const equipment: any[] = await Promise.all(
               equipmentSnap.docs.map(async (docSnap) => {
@@ -138,13 +143,13 @@ export class ReservationService {
                 const equipmentDocRef = typeof equipmentIdPath === 'string'
                   ? doc(this.firestore, equipmentIdPath)
                   : equipmentIdPath;
-  
+
                 try {
                   const equipmentDoc = await getDoc(equipmentDocRef);
                   const equipmentData = equipmentDoc.exists()
                     ? equipmentDoc.data() as { name: string; extra_price: number }
                     : { name: 'Inconnu', extra_price: 0 };
-  
+
                   return {
                     name: equipmentData.name,
                     price: equipmentData.extra_price
@@ -155,25 +160,25 @@ export class ReservationService {
                 }
               })
             );
-  
+
             const roomData = roomSnap.exists()
               ? roomSnap.data() as {
-                  name: string;
-                  price_per_day: number;
-                  area?: number;
-                  capacity_seated?: number;
-                  capacity_total?: number;
-                  equipment_description?: string;
-                }
+                name: string;
+                price_per_day: number;
+                area?: number;
+                capacity_seated?: number;
+                capacity_total?: number;
+                equipment_description?: string;
+              }
               : {
-                  name: 'Salle inconnue',
-                  price_per_day: 0
-                };
-  
-                const total_price =
-                roomData.price_per_day +
-                equipment.reduce((sum, eq) => sum + (Number(eq.price) || 0), 0);
-  
+                name: 'Salle inconnue',
+                price_per_day: 0
+              };
+
+            const total_price =
+              roomData.price_per_day +
+              equipment.reduce((sum, eq) => sum + (Number(eq.price) || 0), 0);
+
             return {
               ...reservation,
               user: userSnap.exists() ? userSnap.data() : null,
@@ -193,28 +198,28 @@ export class ReservationService {
       map(results => results.filter(res => res !== null))
     );
   }
-  
-  
-  
-  
-  
+
+
+
+
+
 
   getReservationsCountPerDayByRoom(): Observable<{
     [roomName: string]: { [dateStr: string]: number }
   }> {
     const reservationsRef = collection(this.firestore, 'reservations');
-  
+
     return collectionData(reservationsRef, { idField: 'uid' }).pipe(
       switchMap(async (reservations: any[]) => {
         const result: { [room: string]: { [dateStr: string]: number } } = {};
-  
+
         console.log('→ Toutes les réservations:', reservations);
-  
+
         for (const res of reservations) {
           const rawDate = res.start_date;
           const date: Date = rawDate?.toDate?.() ?? new Date(rawDate);
           const dateStr = date.toISOString().split('T')[0];
-  
+
           // Charger les données de la salle
           const roomRefPath = res.room_id?.path;
           let roomName = 'Inconnue';
@@ -228,15 +233,15 @@ export class ReservationService {
               console.warn('Erreur lors de la récupération de la salle:', e);
             }
           }
-  
+
           console.log(`→ Réservation: salle = ${roomName}, date = ${dateStr}`);
-  
+
           if (!result[roomName]) result[roomName] = {};
           if (!result[roomName][dateStr]) result[roomName][dateStr] = 0;
-  
+
           result[roomName][dateStr]++;
         }
-  
+
         console.log('→ Résultat final des statistiques par salle:', result);
         return result;
       })
@@ -246,20 +251,20 @@ export class ReservationService {
   /**
  * Supprime une réservation et ses équipements associés
  */
-supprimerReservation(reservationId: string): Promise<void> {
-  const reservationDocRef = doc(this.firestore, `reservations/${reservationId}`);
-  const equipmentCollectionRef = collection(this.firestore, `reservations/${reservationId}/equipment`);
+  supprimerReservation(reservationId: string): Promise<void> {
+    const reservationDocRef = doc(this.firestore, `reservations/${reservationId}`);
+    const equipmentCollectionRef = collection(this.firestore, `reservations/${reservationId}/equipment`);
 
-  return getDocs(equipmentCollectionRef).then(snapshot => {
-    const deletes = snapshot.docs.map(docSnap =>
-      deleteDoc(doc(this.firestore, `reservations/${reservationId}/equipment/${docSnap.id}`))
-    );
+    return getDocs(equipmentCollectionRef).then(snapshot => {
+      const deletes = snapshot.docs.map(docSnap =>
+        deleteDoc(doc(this.firestore, `reservations/${reservationId}/equipment/${docSnap.id}`))
+      );
 
-    return Promise.all(deletes).then(() => deleteDoc(reservationDocRef));
-  });
-}
+      return Promise.all(deletes).then(() => deleteDoc(reservationDocRef));
+    });
+  }
 
-  
-  
-  
+
+
+
 }

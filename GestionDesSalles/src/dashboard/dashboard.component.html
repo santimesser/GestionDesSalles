@@ -1,28 +1,40 @@
 <div class="page">
     <div class="header">
-        <app-header></app-header>
+      <app-header></app-header>
     </div>
-
     <div class="message">
-        <h1>Salles pour reserver</h1>
-      </div>
-
-    <div class="reservations-container">
-        <div class="reservation-card" *ngFor="let salle of salles">
-
-            <div class="card-header">
-                <span class="price">{{ salle.price_per_day | currency:'.-' }}</span>
-            </div>
-            <div class="card-body">
-                <h3>{{ salle.name }}</h3>
-                <p>{{ salle.area }} m²</p>
-                <p>{{ salle.seated_places || 0 }} assis / {{ salle.total_seats || 0 }} total</p>
-                <p>{{ salle.equipment_description || 'Non spécifié' }}</p>
-            </div>
-            <div class="card-actions">
-                <div class="button">
-                    <button class="moreTransactions" type="button" (click)="ouvrirReservation(salle)">Reserver</button>
-                </div>
-            </div>
-        </div>
+      <h1>Salles pour reserver</h1>
     </div>
+    <div class="reservations-container">
+      <div class="reservation-card" *ngFor="
+  
+  let salle of paginatedSalles">
+        <div class="card-header">
+          <span class="price">{{ salle.price_per_day | currency:'.-' }}</span>
+        </div>
+        <div class="card-body">
+          <h3>{{ salle.name }}</h3>
+          <p>{{ salle.area }} m²</p>
+          <p>{{ salle.seated_places || 0 }} assis / {{ salle.total_seats || 0 }} total</p>
+          <p>{{ salle.equipment_description || 'Non spécifié' }}</p>
+        </div>
+        <div class="card-actions">
+          <div class="button">
+            <button class="moreTransactions" type="button" (click)="ouvrirReservation(salle)">Reserver</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="pageChange">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+          <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
+        </svg>
+      </button>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pageChange">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+          <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
+        </svg>
+      </button>
+    </div>
+  </div>

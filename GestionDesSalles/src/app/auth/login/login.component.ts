@@ -116,6 +116,10 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/forgot-password']);
   }
 
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
   /**
    * Interprète les erreurs Firebase
    */

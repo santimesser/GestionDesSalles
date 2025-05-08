@@ -31,6 +31,9 @@ export class ReservationEditComponent implements OnInit {
   equipementsDisponibles: any[] = [];
   selectedEquipements: string[] = [];
   totalEstime: number = 0;
+  schoolStart = new Date('2024-08-26');
+  schoolEnd = new Date('2025-06-27'); 
+  nouvelleDate = new Date(this.selectedDate + 'T08:00:00');
 
   constructor(
     private firestore: Firestore,
@@ -106,13 +109,27 @@ export class ReservationEditComponent implements OnInit {
   }
 
   async modifierReservation() {
+
+    if (this.nouvelleDate < this.schoolStart || this.nouvelleDate > this.schoolEnd) {
+      this.snackBar.open('La date choisie est hors du calendrier scolaire.', 'Fermer', { duration: 3000 });
+      return;
+    }
+    
+  const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (this.nouvelleDate <= today) {
+      this.snackBar.open('Vous ne pouvez pas réserver pour aujourd\'hui ou un jour passé.', 'Fermer', { duration: 3000 });
+      return;
+    }
+
     try {
       const ref = doc(this.firestore, `reservations/${this.reservationId}`);
       const nouvelleDate = new Date(this.selectedDate + 'T08:00:00');
 
       await updateDoc(ref, {
         start_date: Timestamp.fromDate(nouvelleDate),
-        end_date: Timestamp.fromDate(new Date(nouvelleDate.getTime() + 4 * 60 * 60 * 1000)),
+        end_date: Timestamp.fromDate(nouvelleDate),
         disposition: this.reservation.disposition
       });
 
