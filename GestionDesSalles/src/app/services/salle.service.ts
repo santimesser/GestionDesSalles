@@ -40,7 +40,7 @@ export class SalleService {
    */
   listerSalles(currentUserUid: string): Observable<Salle[]> {
     const sallesRef = collection(this.firestore, 'rooms');
-    const q = query(sallesRef, where('created_by', '==', currentUserUid));
+    const q = query(sallesRef);
     return collectionData(q, { idField: 'uid' }) as Observable<Salle[]>;
   }
 

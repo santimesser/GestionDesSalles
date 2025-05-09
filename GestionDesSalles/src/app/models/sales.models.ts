@@ -1,5 +1,3 @@
-
-
 export interface Salle {
   uid?: string;
   name: string;

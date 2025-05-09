@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom, switchMap, Observable, of  } from 'rxjs';
 import {
   Auth,
@@ -9,7 +9,6 @@ import {
   sendEmailVerification,
   signInWithPopup,
   GoogleAuthProvider,
-  onAuthStateChanged,
   User
 } from '@angular/fire/auth';
 
@@ -145,7 +144,6 @@ export class AuthService {
         if (!user) return of(null);
         const userDoc = doc(this.firestore, `users/${user.uid}`);
         return docData(userDoc).pipe(
-          // combinamos los datos de Firestore con uid y email del user connecté
           switchMap((data: any) => {
             if (!data || !data.role) return of(null);
             return of({

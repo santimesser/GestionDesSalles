@@ -13,6 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, mergeMap } from 'rxjs';
 import { Auth, user } from '@angular/fire/auth';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
@@ -43,10 +44,10 @@ export class ReservationService {
                 if (roomData['created_by'] !== uidAdmin) return null;
 
                 let userRef = typeof reservation.user_id === 'string'
-  ? doc(this.firestore, `users/${reservation.user_id}`)
-  : reservation.user_id;
+                  ? doc(this.firestore, `users/${reservation.user_id}`)
+                  : reservation.user_id;
 
-const userSnap = await getDoc(userRef);
+                const userSnap = await getDoc(userRef);
 
                 const equipmentRef = collection(this.firestore, `reservations/${reservation.uid}/equipment`);
                 const equipmentSnap = await getDocs(equipmentRef);
@@ -264,7 +265,24 @@ const userSnap = await getDoc(userRef);
     });
   }
 
-
+  async isRoomAlreadyReserved(roomRef: DocumentReference, date: Date): Promise<boolean> {
+    const reservationsRef = collection(this.firestore, 'reservations');
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+  
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+  
+    const q = query(reservationsRef,
+      where('room_id', '==', roomRef),
+      where('start_date', '>=', Timestamp.fromDate(startOfDay)),
+      where('start_date', '<=', Timestamp.fromDate(endOfDay))
+    );
+  
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  }
+  
 
 
 }
