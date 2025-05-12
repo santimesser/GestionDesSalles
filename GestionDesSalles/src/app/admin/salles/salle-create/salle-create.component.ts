@@ -95,12 +95,13 @@ export class SalleCreateComponent {
       };
 
       this.salleService.ajouterSalle(salle).then(() => {
+        this.dialogRef.close();
         this.snackBar.open('Salle créée avec succès !', 'Fermer', {
           duration: 3000,
           verticalPosition: 'bottom'
         });
-        this.dialogRef.close();
       });
+      
 
     }
   }
@@ -111,6 +112,11 @@ export class SalleCreateComponent {
     return total != null && assis != null && total < assis
       ? { capaciteInvalide: true }
       : null;
+  }
+
+  quitComposite():void{
+    this.dialogRef.close();
+    return;
   }
 
 

@@ -42,9 +42,16 @@
     </mat-checkbox>
   </div>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="salleForm.invalid">
-    Enregistrer les modifications
+  <div class="button">
+  <button class="moreTransactions" type="submit" [disabled]="salleForm.invalid">
+    Enregistrer 
   </button>
+  </div>
+  <div class="button">
+    <button class="moreTransactions" (click)="quitComposite()">
+      Annuler
+    </button>
+  </div>
 
   <div class="error-message" *ngIf="salleForm.hasError('capaciteInvalide')">
     La capacité totale doit être supérieure ou égale à la capacité avec tables

@@ -2,19 +2,20 @@
 .page {
   height: 100%;
   width: 100%;
-  caret-color: transparent;
-  user-select: none;
+  background-color: #f5e6f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: auto;
-  transition: background-color 0.5s ease, color 0.3s ease, border-color 0.3s ease;
-  z-index: -10;
+  position: relative;
 }
 
 .header {
   position: absolute;
   top: 0;
-  align-content: center;
+  width: 100%;
   z-index: 10;
-} 
+}
   
   .historiqueListe {
     grid-row: 2/2;
@@ -115,6 +116,8 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    min-width: 1200px;
+    min-height: 500px;
   }
   
   thead {
@@ -130,7 +133,7 @@
   tbody tr:hover {
     background-color: #f1f1f1;
   }
-  
+
   /* ========== Pagination ========== */
   .pagination {
     width: 73px;
@@ -155,4 +158,91 @@
     fill: rgb(50, 157, 207);
     cursor: pointer;
   }
+
+
+
+  #change{
+    position:absolute;
+    top:55px;
+    right:0;
+  }
   
+
+  @media (width < 1250px) {
+
+    td{
+      font-size: 12px;
+    }
+    
+}
+
+@media (width < 850px) {
+
+  table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+    min-width: unset;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+    margin-top: 10px;
+    padding: 0px;
+  }
+
+  td {
+    text-align: right;
+    position: relative;
+    font-size: 14px;
+    padding: 0px;
+  }
+
+  #positionButton
+  { 
+    text-align: center;
+  }
+
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .pagination {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+  }
+  #register, #change {
+    margin-left:50px;
+    position:absolute;
+    top:6%
+  }
+
+  #salle{
+    position: static;
+  }
+
+  .header{
+    position: static;
+  }
+  
+   
+}

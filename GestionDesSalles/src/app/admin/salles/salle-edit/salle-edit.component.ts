@@ -28,7 +28,7 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 })
 export class SalleEditComponent implements OnInit {
 
-  @Input() salleId!: string; // UID de la salle à modifier
+  @Input() salleId!: string; 
 
   equipementsDispo: any[] = [];
   equipmentSelection: string[] = [];
@@ -110,6 +110,11 @@ export class SalleEditComponent implements OnInit {
     return total != null && assis != null && total < assis
       ? { capaciteInvalide: true }
       : null;
+  }
+
+  quitComposite():void{
+    this.dialogRef.close();
+    return;
   }
   
 }

@@ -7,14 +7,13 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
 import { SalleCreateComponent } from './salle-create/salle-create.component';
 import { SalleEditComponent } from './salle-edit/salle-edit.component';
-import { AdminReservationsComponent } from '../admin-reservations/admin-reservations.component';
 import { HeaderComponent } from '../../composants/header/header.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-salle-dashboard',
   standalone: true,
-  imports: [CommonModule, HeaderComponent,AdminReservationsComponent,
+  imports: [CommonModule, HeaderComponent,
     MatSnackBarModule],
   templateUrl: './salle-dashboard.component.html',
   styleUrls: ['./salle-dashboard.component.css']
@@ -25,6 +24,7 @@ export class SalleDashboardComponent implements OnInit {
   equipementsDispo: any[] = []; // Équipements disponibles
   currentPage: number = 1; // Page actuelle
   pageSize: number = 6; // Nombre de salles par page
+  selectedComponent: boolean = true;
 
   constructor(
     private dialog: MatDialog,
@@ -132,4 +132,12 @@ export class SalleDashboardComponent implements OnInit {
   hasPreviousSalles(): boolean {
     return this.currentPage > 1;
   }
+  
+  triggerComponent(): void {
+    this.selectedComponent = !this.selectedComponent;
+  }
+  
+  
+
+  
 }

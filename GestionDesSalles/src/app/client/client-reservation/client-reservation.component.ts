@@ -9,9 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReservationCreateComponent } from '../reservation-create/reservation-create.component';
 import { ReservationEditComponent } from '../reservation-edit/reservation-edit.component';
-import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 
 
 @Component({
@@ -47,7 +46,7 @@ export class ClientReservationComponent implements OnInit {
       this.router.navigate(['/auth/login']);
     }
 
-    this.reservationService.getReservationsForUser(this.userId).subscribe(data => {
+    this.reservationService.getReservationsForUser(this.userId).subscribe((data: any[]) => {
       this.reservations = data.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
     });
     this.loadReservations();
@@ -94,7 +93,7 @@ export class ClientReservationComponent implements OnInit {
   loadReservations() {
     this.auth.onAuthStateChanged(user => {
       if (user) {
-        this.reservationService.getReservationsForUser(user.uid).subscribe(reservations => {
+        this.reservationService.getReservationsForUser(user.uid).subscribe((reservations: any[]) => {
           this.reservations = reservations;
         });
       }
@@ -102,6 +101,21 @@ export class ClientReservationComponent implements OnInit {
   }
   
   supprimerReservation(reservationId: string): void {
+    const reservation = this.reservations.find(r => r.uid === reservationId);
+    if (!reservation) {
+      this.snackBar.open('Réservation introuvable.', 'Fermer', { duration: 3000 });
+      return;
+    }
+  
+    const startDate = new Date(reservation.startDate);
+    const now = new Date();
+    const diffJours = Math.ceil((startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  
+    if (diffJours <= 14) {
+      this.snackBar.open('Vous ne pouvez plus supprimer une réservation à moins de 14 jours.', 'Fermer', { duration: 3000 });
+      return;
+    }
+
     if (confirm('Voulez-vous vraiment supprimer cette réservation ?')) {
       this.reservationService.supprimerReservation(reservationId).then(() => {
         this.snackBar.open('Réservation supprimée avec succès !', 'Fermer', {

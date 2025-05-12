@@ -1,0 +1,63 @@
+ 
+  .button {
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    border: none;
+    margin-right: 5px;
+    cursor: pointer;
+    outline: none;
+    top:0;
+    z-index: 0;
+    padding: 3px;
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    border-radius: 0.9em;
+    transition: all 0.4s ease;
+    margin-top: 20px;
+  }
+
+  .button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    border-radius: 0.9em;
+    z-index: -1;
+    filter: blur(0);
+    transition: filter 0.4s ease;
+  }
+  
+  .button:hover::before {
+    background: linear-gradient(90deg, #6d966d, #3a3a3a);
+    filter: blur(1.2em);
+  }
+  
+  .button:active::before {
+    filter: blur(0.2em);
+  }
+
+  .moreTransactions {
+    position: relative;
+    display: flex;
+    padding: 0.5rem 1.4rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    width:100%;
+    text-transform: uppercase;
+    vertical-align: middle;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    gap: 0.75rem;
+    color: rgb(65, 63, 63);
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.6s ease;
+    z-index: 1;
+    align-items: center;
+  }
+  
+  .moreTransactions:hover {
+    transform: scale(1.02);
+  }
+  

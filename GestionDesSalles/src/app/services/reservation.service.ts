@@ -28,6 +28,7 @@ export class ReservationService {
 
     return user(this.auth).pipe(
       switchMap(authUser => {
+        
         if (!authUser) return from(Promise.resolve([]));
 
         const uidAdmin = authUser.uid;
@@ -265,23 +266,46 @@ export class ReservationService {
     });
   }
 
-  async isRoomAlreadyReserved(roomRef: DocumentReference, date: Date): Promise<boolean> {
-    const reservationsRef = collection(this.firestore, 'reservations');
+  async getAvailableRoomsForDate(date: Date): Promise<any[]> {
+    const roomsSnap = await getDocs(collection(this.firestore, 'rooms'));
+    const allRooms = roomsSnap.docs.map(doc => ({ ref: doc.ref, data: doc.data() }));
+  
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
   
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
   
-    const q = query(reservationsRef,
-      where('room_id', '==', roomRef),
+    const reservationsSnap = await getDocs(query(
+      collection(this.firestore, 'reservations'),
       where('start_date', '>=', Timestamp.fromDate(startOfDay)),
       where('start_date', '<=', Timestamp.fromDate(endOfDay))
-    );
+    ));
   
-    const snapshot = await getDocs(q);
-    return !snapshot.empty;
+    const reservedRoomIds = reservationsSnap.docs.map(doc => doc.data()['room_id'].id);
+  
+    return allRooms.filter(room => !reservedRoomIds.includes(room.ref.id));
   }
+  
+  async getReservedDatesForRoom(roomRef: DocumentReference): Promise<string[]> {
+    const reservationsSnap = await getDocs(query(
+      collection(this.firestore, 'reservations'),
+      where('room_id', '==', roomRef)
+    ));
+  
+    const reservedDates: Set<string> = new Set();
+    reservationsSnap.forEach(docSnap => {
+      const data = docSnap.data();
+      const date = data['start_date']?.toDate?.();
+      if (date) {
+        reservedDates.add(date.toISOString().split('T')[0]); // format yyyy-mm-dd
+      }
+    });
+  
+    return Array.from(reservedDates);
+  }
+  
+
   
 
 

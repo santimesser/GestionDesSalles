@@ -82,8 +82,8 @@ export class ReservationEditComponent implements OnInit {
       this.recalculerTotal();
     } catch (e) {
       console.error('Erreur chargement reservation:', e);
-      this.snackBar.open('Erreur lors du chargement', 'Fermer', { duration: 3000 });
       this.dialogRef.close();
+      this.snackBar.open('Erreur lors du chargement', 'Fermer', { duration: 3000 });
     }
   }
 
@@ -123,6 +123,8 @@ export class ReservationEditComponent implements OnInit {
       return;
     }
 
+    
+
     try {
       const ref = doc(this.firestore, `reservations/${this.reservationId}`);
       const nouvelleDate = new Date(this.selectedDate + 'T08:00:00');
@@ -148,11 +150,12 @@ export class ReservationEditComponent implements OnInit {
         });
       }
 
-      this.snackBar.open('Réservation modifiée avec succès', 'Fermer', { duration: 3000 });
       this.dialogRef.close();
+      this.snackBar.open('Réservation modifiée avec succès', 'Fermer', { duration: 3000 });
     } catch (e) {
       console.error('Erreur modification:', e);
       this.snackBar.open('Erreur lors de la modification', 'Fermer', { duration: 3000 });
     }
   }
+  
 }

@@ -3,9 +3,10 @@
     <app-header></app-header>
   </div>
 
+  
 
 
-  <div class="historiqueListe">
+  <div class="historiqueListe" *ngIf="selectedComponent==true">
     <div class="button" id="register"  id="salle">
       <button (click)="ouvrirFormulaireCreation()" class="moreTransactions" type="button">
         Ajouter une salle
@@ -27,28 +28,28 @@
       </thead>
       <tbody>
         <tr *ngFor="let salle of getVisibleSalles()">
-          <td>{{ salle.name }}</td>
-          <td>{{ salle.area }}</td>
-          <td>{{ salle.total_seats }}</td>
-          <td>{{ salle.seated_places }}</td>
-          <td>{{ salle.equipment_description }}</td>
-          <td>{{ salle.price_per_day }} CHF</td>
-          <td>
+          <td data-label="Nom">{{ salle.name }}</td>
+          <td data-label="Surface">{{ salle.area }}</td>
+          <td data-label="Total personnes">{{ salle.total_seats }}</td>
+          <td data-label="Personnes assis">{{ salle.seated_places }}</td>
+          <td data-label="Équipements inclus">{{ salle.equipment_description }}</td>
+          <td data-label="Prix">{{ salle.price_per_day }} CHF</td>
+          <td data-label="Options supplémentaires">
             <ul>
-              <li *ngFor="let equipId of salle.equipment_ids">
+              <p *ngFor="let equipId of salle.equipment_ids" data-label="Equipement">
                 {{ getEquipmentName(equipId) }}
-              </li>
+              </p>
             </ul>
           </td>
-          <td>
+          <td id="positionButton">
             <div class="button">
               <button (click)="ouvrirFormulaireModifier(salle.uid!)" class="moreTransactions" type="button">
-                ✏️ Modifier
+                Modifier
               </button>
             </div>
             <div class="button">
               <button (click)="supprimerSalle(salle.uid!)" class="moreTransactions" type="button">
-                🗑️ Supprimer
+                 Supprimer
               </button>
             </div>
           </td>
@@ -71,7 +72,17 @@
     </div>
 
   </div>
+<!--
+  <div class="button" id="change" >
+    <button (click)="triggerComponent()" class="moreTransactions" type="button">
+       Change
+    </button>
+  </div>
 
-  <app-admin-reservations></app-admin-reservations>
+  <div class="reservations" *ngIf="selectedComponent==false">
+     <app-admin-reservations></app-admin-reservations>  
+  </div>-->
+
+
   
 </div>

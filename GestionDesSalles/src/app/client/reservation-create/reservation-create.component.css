@@ -109,3 +109,7 @@ form {
   .moreTransactions:hover {
     transform: scale(1.02);
   }
+
+  .info-message{
+    font-size: 10px;
+  }

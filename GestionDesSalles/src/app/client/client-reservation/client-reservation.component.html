@@ -9,6 +9,11 @@
     +
   </button>
 
+  <div *ngIf="paginatedReservations.length === 0" class="no-reservations-message">
+    <p>Vous n'avez aucune réservation pour le moment.</p>
+  </div>
+  
+
   <div class="reservations-container">
     <div class="reservation-card" *ngFor="let res of paginatedReservations">
         <div class="card-header">
