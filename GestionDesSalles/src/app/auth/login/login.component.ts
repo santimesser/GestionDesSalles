@@ -16,10 +16,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+
+  /* ********************* Variables *********************** */
+
   loginForm: FormGroup;
   errorMessage: string = '';
   errorMessageBool: boolean = false;
   isLoading: boolean = true;
+
+    /* ********************* Constructeur *********************** */
 
   constructor(
     private fb: FormBuilder,
@@ -33,12 +38,14 @@ export class LoginComponent implements OnInit {
     });
   }
 
+    /* ********************* Fonctions *********************** */
+
   /**
    * Vérifie si l'utilisateur est déjà connecté et redirige si nécessaire
    */
   async ngOnInit() {
     const user = await this.authService.getCurrentUser();
-    if (user) {
+    if (user) {// si l'utilisateur est deja connecte
       this.router.navigate(['/dashboard']);
     } 
     else {
@@ -46,11 +53,15 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  /**
-   * Soumet le formulaire de connexion
-   */
+
+/**
+ * Soumet le formulaire de connexion.
+ * Vérifie la validité du formulaire et authentifie l'utilisateur via le service d'authentification.
+ * Affiche un message de succès en cas de connexion réussie.
+ * Affiche un message d'erreur et lève une exception en cas d'échec de la connexion.
+ */
   async onSubmit() {
-    if (this.loginForm.valid) {
+    if (this.loginForm.valid) {// Vérifier si le formulaire est valide
       try {
         await this.authService.login(
           this.loginForm.value.email,
@@ -73,7 +84,10 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Connexion avec Google
+   * Connecte l'utilisateur avec Google.
+   * Ouvre une fenêtre popup pour l'authentification Google.
+   * Redirige l'utilisateur vers la page de configuration du profil si la connexion est réussie.
+   * Affiche un message d'erreur et lève une exception en cas d'échec de la connexion.
    */
   async loginWithGoogle() {
     try {
@@ -116,13 +130,21 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/forgot-password']);
   }
 
+  /**
+   * Redirection vers la page de dashboard
+   */
   goToDashboard() {
     this.router.navigate(['/dashboard']);
   }
 
-  /**
-   * Interprète les erreurs Firebase
-   */
+/**
+ * Gère les erreurs d'authentification et renvoie un message d'erreur approprié.
+ * 
+ * @param error L'erreur à traiter, de type inconnu.
+ * @returns Un message d'erreur correspondant au type d'erreur fourni.
+ * Si l'erreur est liée à des informations d'identification invalides,
+ * un message spécifique est renvoyé. Sinon, un message générique est renvoyé.
+ */
   handleError(error: unknown): string {
     if (typeof error === 'object' && error !== null && 'message' in error) {
       const msg = (error as Error).message;

@@ -27,22 +27,37 @@ import { Observable } from 'rxjs';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+
+      /* ********************* Variables *********************** */
+
+      userName: string = 'Utilisateur';
+      isMenuOpen = false;
+      userId: string = '';
+      userRole: string = '';
+      userData: { uid: string; email: string; role: string; } | null = null;
+      private userSubscription: Unsubscribe | null = null;     
+
+      /* ********************* Constructor *********************** */
+
   constructor(private authService: AuthService, private firestore: Firestore, private router: Router) { }
 
-  userName: string = 'Utilisateur';
-  isMenuOpen = false;
-  userId: string = '';
-  userRole: string = '';
-  userData: { uid: string; email: string; role: string; } | null = null;
-  private userSubscription: Unsubscribe | null = null; 
+      /* ********************* Functions *********************** */
 
+  /**
+   * Change l'etat du menu (ouvert ou ferme).
+   */
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  /**
+   * Recupere les informations de l'utilisateur connecte.
+   * Met a jour les variables d'instance avec ces informations.
+   * @returns {void}
+   */
   async ngOnInit() {
     this.authService.getCurrentUserWithRole().subscribe(userData => {
-      if (userData) {
+      if (userData) { // si l'utilisateur est connecté
         this.userData = userData;
         this.userId = userData.uid;
         this.userRole = userData.role;
@@ -51,19 +66,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
+  /**
+   * Se deconnecte.
+   * Supprime le jeton d'acc s enregistr  localement.
+   * Redirige vers la page de connexion.
+   * @returns {Promise<void>}
+   */
   async logout() {
     await this.authService.logout();
     this.router.navigate(['/auth/login']); 
   }
 
+  /**
+   * Appel  lorsque le composant est d  truit.
+   * Supprime l'abonnement l'observable qui  coute les changements de l'utilisateur connect .
+   * @returns {void}
+   */
   ngOnDestroy() {
-    if (this.userSubscription) {
+    if (this.userSubscription) {// si l'utilisateur est connecté
       this.userSubscription(); 
       this.userSubscription = null;
     }
   }
-  
-
 }

@@ -1,3 +1,4 @@
+/* ******************** Environnement de developpement *************************  */
 export const environment = {
     production: false,
     firebaseConfig: {

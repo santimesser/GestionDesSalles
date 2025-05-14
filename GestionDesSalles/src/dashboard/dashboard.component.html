@@ -6,11 +6,9 @@
       <h1>Salles pour reserver</h1>
     </div>
     <div class="reservations-container">
-      <div class="reservation-card" *ngFor="
-  
-  let salle of paginatedSalles">
+      <div class="reservation-card" *ngFor="let salle of paginatedSalles">
         <div class="card-header">
-          <span class="price">{{ salle.price_per_day | currency:'.-' }}</span>
+          <span class="price">{{ salle.price_per_day | currency:'CHF' }}</span>
         </div>
         <div class="card-body">
           <h3>{{ salle.name }}</h3>

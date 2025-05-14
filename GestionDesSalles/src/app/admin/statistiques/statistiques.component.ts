@@ -16,6 +16,8 @@ import { HeaderComponent } from '../../composants/header/header.component';
 })
 export class StatistiquesComponent implements OnInit {
 
+   /* ********************* Variables *********************** */
+
   // Liste des mois en français avec leur valeur numérique (0-11)
   months = [
     { name: 'Janvier', value: 0 },
@@ -31,20 +33,15 @@ export class StatistiquesComponent implements OnInit {
     { name: 'Novembre', value: 10 },
     { name: 'Décembre', value: 11 }
   ];
-
   selectedGraphics: boolean = true;
-
   selectedMonth = new Date().getMonth(); // Mois sélectionné par défaut : actuel
   selectedYear = new Date().getFullYear(); // Année actuelle
-
   pieChartType: ChartType = 'pie';
-
   // Données pour le graphique
   equipmentChartData: ChartData<'pie', number[], string> = {
     labels: [],
     datasets: [{ data: [] }]
   };
-
   pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -54,13 +51,11 @@ export class StatistiquesComponent implements OnInit {
       }
     }
   };
-
   lineChartLabels: string[] = [];
   lineChartData: ChartData<'line'> = {
     labels: [],
     datasets: []
   };
-
   lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -74,20 +69,34 @@ export class StatistiquesComponent implements OnInit {
     }
   };
 
+   /* ********************* constructor *********************** */
+
   constructor(private reservationService: ReservationService, private firestore: Firestore) { }
 
+ /* ********************* fonctions *********************** */
+
+  /**
+   * Fonction appelée lors de l'initialisation du composant.
+   * Charge les données pour les graphiques.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.loadChartData();
     this.loadChartDataGraphique();
   }
 
-  // Fonction pour charger les données du graphique selon le mois/année sélectionnés
+  /**
+   * Charge les données pour le graphique en camembert.
+   * Demande la liste des equipements demandees pour le mois et l'anneees  lectionnes.
+   * Met jour les donnees du graphique en camembert.
+   * @returns {void}
+   */
   loadChartData(): void {
     this.reservationService.getEquipmentStatsByMonthYear(this.selectedMonth, this.selectedYear).subscribe(async (stats) => {
       const labels: string[] = [];
       const values: number[] = [];
 
-      for (const [equipId, count] of Object.entries(stats)) {
+      for (const [equipId, count] of Object.entries(stats)) {// parcours de l'objet stats
         const docSnap = await getDoc(doc(this.firestore, `equipment/${equipId}`));
         const name = docSnap.exists() ? docSnap.data()['name'] : 'Inconnu';
         labels.push(name);
@@ -101,23 +110,25 @@ export class StatistiquesComponent implements OnInit {
     });
   }
 
+  /**
+   * Charge les donnees pour le graphique en ligne.
+   * Demande la liste des reservations par jour et par salle.
+   * Met jour les donnees du graphique en ligne.
+   * @returns {void}
+   */
   loadChartDataGraphique():void{
     this.reservationService.getReservationsCountPerDayByRoom().subscribe(data => {
-      console.log('→ Données reçues dans le composant:', data);
-    
       const allDates = new Set<string>();
     
-      for (const room in data) {
+      for (const room in data) {// parcours de l'objet data
         for (const date in data[room]) {
           allDates.add(date);
         }
       }
     
       const sortedDates = Array.from(allDates).sort();
-      console.log('→ Dates triées:', sortedDates);
-    
       this.lineChartLabels = sortedDates;
-    
+      
       const datasets = Object.keys(data).map(room => {
         const counts = sortedDates.map(date => data[room][date] || 0);
         console.log(`→ Salle "${room}" - Données:`, counts);
@@ -126,16 +137,19 @@ export class StatistiquesComponent implements OnInit {
           data: counts
         };
       });
-    
+
       this.lineChartData = {
         labels: sortedDates,
         datasets
       };
-    
-      console.log('→ Données prêtes pour le graphique:', this.lineChartData);
     });
   }
 
+  /**
+   * Permet de switcher entre le graphique en camembert et le graphique en ligne.
+   * Met jour la propri t  selectedGraphics pour g rer l'affichage de l'un ou de l'autre.
+   * @returns {void}
+   */
   toggleGraphics():void{
     this.selectedGraphics = !this.selectedGraphics;
   }

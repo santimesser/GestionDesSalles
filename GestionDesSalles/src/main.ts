@@ -8,8 +8,9 @@ import { provideRouter } from '@angular/router';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
+ 
 bootstrapApplication(AppComponent, {
-  providers: [
+  providers: [ 
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

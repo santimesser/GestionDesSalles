@@ -12,11 +12,18 @@ import { sendPasswordResetEmail, Auth } from '@angular/fire/auth';
   styleUrl: './forgot-password.component.css'
 })
 export class ForgotPasswordComponent {
+
+    /* ********************* Variables *********************** */
+
   email: string = '';
   message: string = '';
   messageBool: boolean = false;
 
+    /* ********************* Constructor *********************** */
+
   constructor(private auth: Auth, private router: Router) {}
+
+  /* ********************* Functions *********************** */
 
   /**
    * Envoie un email de réinitialisation

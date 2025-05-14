@@ -4,13 +4,21 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { map } from 'rxjs/operators';
 
+/**
+ * Guard qui permet d'accéder à une route uniquement si l'utilisateur est
+ * connecté et a le rôle "client".
+ * Si l'utilisateur n'est pas connecté ou n'a pas le rôle "client", il est
+ * redirigé vers la page d'erreur 403.
+ * @returns Un observable qui se résout avec un boolean indiquant si
+ * l'utilisateur peut accéder à la route.
+ */
 export const ClientGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   return authService.getCurrentUserWithRole().pipe(
     map(user => {
-      if (user && user.role === 'client') {
+      if (user && user.role === 'client') { // Si l'utilisateur est connecté et a le rôle client
         return true;
       } else {
         router.navigate(['/unauthorized']);

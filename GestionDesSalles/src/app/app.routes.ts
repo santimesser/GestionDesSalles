@@ -5,14 +5,16 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { adminGuard } from './guards/admin.guard';
 import { ClientGuard } from './guards/client.guard';
 
+
 export const appRoutes: Routes = [
+  // auth routes pour authentification
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.routes').then(m => m.authRoutes)
+    loadChildren: () => import('./auth/auth.routes').then(m => m.authRoutes) 
   },
   { 
     path: 'forgot-password',
-    component: ForgotPasswordComponent
+    component: ForgotPasswordComponent 
   },
   { path: 'setup-profile', 
     component: SetupProfileComponent 
@@ -20,9 +22,11 @@ export const appRoutes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
-  },{
+  },
+  /* ******************** routes accesibles pour les admins (activates avec les adminGuard) ************************* */
+  {
     path: 'admin',
-    canActivate: [adminGuard],
+    canActivate: [adminGuard], 
     loadComponent: () => import('./admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
   },
   {
@@ -35,10 +39,7 @@ export const appRoutes: Routes = [
     canActivate: [adminGuard],
     loadComponent: () => import('./admin/statistiques/statistiques.component').then(m => m.StatistiquesComponent)
   },
-  {
-    path: 'unauthorized',
-    loadComponent: () => import('./unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
-  },
+  /* ******************** routes accesibles pour les clients (activates avec les ClientGuard) ************************* */
   {
     path: 'client',
     canActivate: [ClientGuard],
@@ -49,6 +50,12 @@ export const appRoutes: Routes = [
     canActivate: [ClientGuard],
     loadComponent: () => import('./client/client-reservation/client-reservation.component').then(m => m.ClientReservationComponent)
   },
+  /* ******************** routes autres  ************************* */
+  {
+    path: 'unauthorized',
+    loadComponent: () => import('./unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
+  },
+  /* ******************** routes par defaut  ************************* */
   {
     path: '',
     redirectTo: '/auth/login',
